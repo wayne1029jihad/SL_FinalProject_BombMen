@@ -1,1 +1,4 @@
 /bin/
+
+#ignore all external jar
+*.jar
