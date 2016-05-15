@@ -14,18 +14,23 @@ public class GameStage extends PApplet{
 	public void setup() {
 		size(width, height);
 		smooth();
-		
-		
+
 		cp5 = new ControlP5(this);
 		cp5.addButton("btn1")
 		.setLabel("Login").setPosition(500, 100).setSize(200, 50);
 		cp5.get(Button.class, "btn1").getCaptionLabel().setFont(createFont("Arial",20,true));
 		
+		cp5.addButton("btn2")
+		.setLabel("Exit").setPosition(500, 300).setSize(200, 50);
+		cp5.get(Button.class, "btn2").getCaptionLabel().setFont(createFont("Arial",20,true));
 	}
 	public void btn1(){
 		LoginPanel login = new LoginPanel();
 		String []temp = {"LOGIN"};
 		runSketch(temp, login);
+	}
+	public void btn2(){
+		exit();
 	}
 	public void draw() {
 		

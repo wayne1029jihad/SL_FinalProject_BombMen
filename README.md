@@ -26,5 +26,5 @@ Example of account.json:
 
 ## Commit
 
-***PlEASE JUST commit .java source code,
+***PLEASE JUST commit .java source code,
 unless you are really know what you done.***

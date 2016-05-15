@@ -3,6 +3,7 @@ package main;
 import processing.core.PApplet;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
+
 import controlP5.ControlP5;
 import controlP5.Textfield;
 
@@ -14,31 +15,40 @@ public class LoginPanel extends PApplet{
 		smooth();
 
 		cp5 = new ControlP5(this);
-		cp5.addTextfield("Account");
-		cp5.addTextfield("Password");
+
+		cp5.addLabel("Your Account:")
+		.setPosition(40,60)
+		.setSize(200,200)
+		.setFont((createFont("Arial",32,true)))// use true/false for smooth/no-smooth
+		.setColor(color(0,0,0));
+
+		cp5.addLabel("Your Password:")
+		.setPosition(40,200)
+		.setSize(200,200)
+		.setFont((createFont("Arial",32,true)))
+		.setColor(color(0,0,0));
+
+		cp5.addTextfield("Account")
+		.setSize(200, 60)
+		.setFont(createFont("Arial",20,true))
+		.setColorCursor(color(0,0,0))
+		.setPosition(50, 100)
+		.setColorBackground(color(155,220,235))
+		.setColor(color(0,0,0))
+		.getCaptionLabel().hide();
+
+		cp5.addTextfield("Password")
+		.setSize(200, 60)
+		.setFont(createFont("Arial",20,true))
+		.setColorCursor(color(0,0,0))
+		.setPosition(50, 250)
+		.setColorBackground(color(155,220,235))
+		.setColor(color(0,0,0))
+		.setPasswordMode(true)
+		.getCaptionLabel().hide();
+
 		cp5.addButton("submit").setPosition(150,400).setSize(100,50);
 		cp5.getController("submit").getCaptionLabel().setFont((createFont("Arial",20,true)));
-		
-		Textfield text = cp5.get(Textfield.class, "Account");
-		text.setSize(200, 60);
-		text.setFont(createFont("Arial",20,true));// use true/false for smooth/no-smooth
-		text.setColorCursor(color(0,0,0));
-		text.setPosition(150, 100);
-		text.setColorBackground(color(155,220,235));
-		text.setColor(color(0,0,0));
-		text.getCaptionLabel().hide();
-		
-		text = cp5.get(Textfield.class, "Password");
-		text.setSize(200, 60);
-		text.setFont(createFont("Arial",20,true));
-		text.setColorCursor(color(0,0,0));
-		text.setPosition(150, 300);
-		text.setColorBackground(color(155,220,235));
-		text.setColor(color(0,0,0));
-		text.setPasswordMode(true);
-		text.getCaptionLabel().hide();
-		
-		
 	}
 	public void submit(){
 		int i;
