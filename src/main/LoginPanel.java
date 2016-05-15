@@ -1,7 +1,8 @@
 package main;
 
 import processing.core.PApplet;
-
+import processing.data.JSONArray;
+import processing.data.JSONObject;
 import controlP5.ControlP5;
 import controlP5.Textfield;
 
@@ -40,8 +41,32 @@ public class LoginPanel extends PApplet{
 		
 	}
 	public void submit(){
-		System.out.println(cp5.get(Textfield.class, "Password").getText());
-		System.out.println(cp5.get(Textfield.class, "Account").getText());
+		int i;
+		JSONArray arr = loadJSONArray("account.json");
+		JSONObject obj = null;
+		String account = cp5.get(Textfield.class, "Account").getText();
+		String password = cp5.get(Textfield.class, "Password").getText();
+
+		for (i = 0;i< arr.size();i++){
+			obj = arr.getJSONObject(i);
+			if (obj.getString("account").equals(account))
+				break;
+		}
+
+		if(arr.size() == 0 ){
+			System.out.println("account list is empty");
+		} else if (arr.size() == i){
+			System.out.println("Sorry, we don't recognize this account.");
+		} else {
+			if (obj.getString("password").equals(password)) {
+				System.out.println("password correct");
+			} else {
+				System.out.println("password wrong");
+			}
+		}
+
+		System.out.println(password);
+		System.out.println(account);
 		frame.setVisible(false);
 		stop();
 	}
