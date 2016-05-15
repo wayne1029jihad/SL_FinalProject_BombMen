@@ -1,0 +1,50 @@
+import java.awt.image.BufferedImage;
+import java.util.Timer;
+import java.util.TimerTask;
+public class SkillBomb extends AbstractSkill{
+	TimerTask changeToFire;
+	Timer timer;
+	@Override
+	public void initial(int num,int power,int accuracy,BufferedImage bomb,BufferedImage fire) {
+		// TODO Auto-generated method stub
+		setNumber(num);
+		setAccuracy(accuracy);
+		setPower(power);
+		setImage(bomb,fire);
+		timer= new Timer();
+	}
+	public void launch(Character ch)
+	{
+		if(getNumber()>0)
+		{
+			setBombX(ch.getX());
+			setBombY(ch.getY());
+			changeToFire=new TimerTask()
+					{
+						//炸彈位置的圖形要改畫火
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							
+						}
+				
+					};
+			timer.schedule(changeToFire,getPower());
+			for(int x=getBombX()-getAccuracy();x<=getBombX()+getAccuracy();x++)
+			{
+				for(int y=getBombY()-getAccuracy();y<=getBombY()+getAccuracy();y++)
+				{
+					//改變變炸後炸彈影響範圍的圖形
+					if((x-getBombX())*(x-getBombX())+(y-getBombY())*(y-getBombY())<=getAccuracy()*getAccuracy())
+					{
+						
+					}
+				}
+			}
+			setNumber(getNumber()-1);
+		}
+		
+	}
+	
+	
+}
