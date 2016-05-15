@@ -4,12 +4,17 @@ import processing.core.PApplet;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import controlP5.ControlP5;
 import controlP5.Textfield;
 
 @SuppressWarnings("serial")
 public class LoginPanel extends PApplet{
 	private ControlP5 cp5;
+	private int message = 0;
 	public void setup() {
 		size(500, 500);
 		smooth();
@@ -47,11 +52,18 @@ public class LoginPanel extends PApplet{
 		.setPasswordMode(true)
 		.getCaptionLabel().hide();
 
-		cp5.addButton("submit").setPosition(150,400).setSize(100,50);
-		cp5.getController("submit").getCaptionLabel().setFont((createFont("Arial",20,true)));
+		cp5.addButton("Submit").setPosition(50,400).setSize(100,50);
+		cp5.getController("Submit").getCaptionLabel().setFont((createFont("Arial",20,true)));
+
+		cp5.addButton("New").setPosition(200,400).setSize(100,50);
+		cp5.getController("New").getCaptionLabel().setFont((createFont("Arial",20,true)));
+
+		cp5.addButton("Cancel").setPosition(350,400).setSize(100,50);
+		cp5.getController("Cancel").getCaptionLabel().setFont((createFont("Arial",20,true)));
 	}
-	public void submit(){
+	public void Submit(){
 		int i;
+		boolean pass = false;
 		JSONArray arr = loadJSONArray("account.json");
 		JSONObject obj = null;
 		String account = cp5.get(Textfield.class, "Account").getText();
@@ -66,21 +78,77 @@ public class LoginPanel extends PApplet{
 		if(arr.size() == 0 ){
 			System.out.println("account list is empty");
 		} else if (arr.size() == i){
-			System.out.println("Sorry, we don't recognize this account.");
+			message = 1;
 		} else {
 			if (obj.getString("password").equals(password)) {
 				System.out.println("password correct");
+				pass = true;
 			} else {
-				System.out.println("password wrong");
+				message = 2;
 			}
 		}
 
 		System.out.println(password);
 		System.out.println(account);
+		if(pass){
+			frame.setVisible(false);
+			stop();
+		}
+	}
+	public void New(){
+		BufferedWriter output;
+		JSONArray arr = loadJSONArray("account.json");
+		JSONObject obj = null;
+		String account = cp5.get(Textfield.class, "Account").getText();
+		String password = cp5.get(Textfield.class, "Password").getText();
+		int i;
+
+		for (i = 0;i< arr.size();i++){
+			obj = arr.getJSONObject(i);
+			if (obj.getString("account").equals(account))
+				break;
+		}
+		if (i < arr.size()){
+			message = 3;
+			return;
+		}
+
+		obj.setString("account", account);
+		obj.setString("password", password);
+
+		arr.append(obj);
+
+		try {
+			output = new BufferedWriter(new FileWriter("account.json"));
+			output.write(arr.toString());
+			output.close();
+		} catch (IOException ex){
+			ex.printStackTrace();
+		}
+	}
+	public void Cancel(){
 		frame.setVisible(false);
 		stop();
 	}
 	public void draw() {
+		background(255,255,255);
+		switch(message){
+			case 1:
+				fill(255,0,0);
+				textFont(createFont("Arial",24,true));
+				text("Sorry, we don't recognize this account.",30,370);
+				break;
+			case 2:
+				fill(255,0,0);
+				textFont(createFont("Arial",28,true));
+				text("password wrong",100,370);
+				break;
+			case 3:
+				fill(255,0,0);
+				textFont(createFont("Arial",28,true));
+				text("Can't use this account",100,370);
+				break;
+		}
 		
 	}
 }
