@@ -20,9 +20,11 @@ public class Map extends PApplet implements Map_interface{//
 	private Character characters2;//for test
 	PImage ch1,ch2;//for test wait for character
 	private GameStage gs;
+	private int boxweight = 45;
+	private int boxheight = 40;
 	private int weight, height;
 	private int []map;
-	PImage background,obstacle,obstacle_break,wall,floor;
+	PImage background,obstacle,obstacle_break,wall,floor,bomb;
 	
 	static BufferedReader br = null;//read bit map 	
 	
@@ -33,7 +35,8 @@ public class Map extends PApplet implements Map_interface{//
 		height = 13;
 		println(dataPath(""));
 		map = new int[weight*height]; 
-		loadmap();		
+		loadmap();
+		loadcharacter();
 	}
 	/*constructer version
 	public Map(GameStage gs, int weight, int height)
@@ -48,11 +51,28 @@ public class Map extends PApplet implements Map_interface{//
 	public void loadmap()
 	{
 		floor = loadImage("floor.png");	
-		obstacle = loadImage("bump.png");//this png not in source
+		obstacle = loadImage("obstacle.png");//this png not in source
 		obstacle_break = loadImage("obstacle_break.png");
-		wall = loadImage("bump_red.png");//this png not in source¡Ause rad bomb 
-		readerfile("grass.txt",weight);
+		wall = loadImage("wall.png");
+				readerfile("grass.txt",weight);
 	}
+	public void loadcharacter()
+	{
+		ch1 = loadImage("CH1_front.png");
+		ch2 = loadImage("CH2_front.png");	
+
+	}
+	public void setBomb(int state)
+	{
+		if(state == 2)
+			bomb = loadImage("bump_red.png");
+		else if(state == 1)
+			bomb = loadImage("bump_s.png");
+		else
+			bomb = loadImage("bump.png");
+		draw();//display();		
+	}
+	//public void display()
 	public void draw()
 	{
 		int i;
@@ -61,16 +81,19 @@ public class Map extends PApplet implements Map_interface{//
 			switch(map[i])
 			{
 				case 1:
-					image(obstacle_break, (i%weight)*45, (i/weight)*40,45,40);
+					image(obstacle_break, (i%weight)*boxweight, (i/weight)*boxheight,boxweight,boxheight);
 					break;
 				case 2:
-					image(obstacle, (i%weight)*45, (i/weight)*40,45,40);
+					image(obstacle, (i%weight)*boxweight, (i/weight)*boxheight,boxweight,boxheight);
+					break;
+				case 3:
+					image(bomb, (i%weight)*boxweight, (i/weight)*boxheight,boxweight,boxheight);
 					break;
 				case 8:
-					image(wall, (i%weight)*45, (i/weight)*40,45,40);
+					image(wall, (i%weight)*boxweight, (i/weight)*boxheight,boxweight,boxheight);
 					break;
 				default:
-					image(floor, (i%weight)*45, (i/weight)*40,45,40);
+					image(floor, (i%weight)*boxweight, (i/weight)*boxheight,boxweight,boxheight);
 			}
 		}
 	}
