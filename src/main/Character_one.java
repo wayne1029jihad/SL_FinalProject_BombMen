@@ -29,7 +29,7 @@ public class Character_one extends AbstractCharacter{
 		setPowerTimes();
 		
 		try{
-			image = ImageIO.read(new File("src\\resource\\angry_bird.jpg") );
+			image = ImageIO.read(new File("src\\angry_bird.jpg") );
 		}catch(Exception ex){
 			System.out.println("NO EXAMPLE.JPG");
 		}
