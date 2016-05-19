@@ -11,10 +11,11 @@ import java.io.IOException;
 import controlP5.ControlP5;
 import controlP5.Textfield;
 
-@SuppressWarnings("serial")
 public class LoginPanel extends PApplet{
+	private static final long serialVersionUID = 1L;
 	private ControlP5 cp5;
 	private int message = 0;
+	public boolean loginpass;
 	public void setup() {
 		size(500, 500);
 		smooth();
@@ -63,7 +64,7 @@ public class LoginPanel extends PApplet{
 	}
 	public void Submit(){
 		int i;
-		boolean pass = false;
+		loginpass = false;
 		JSONArray arr = loadJSONArray("account.json");
 		JSONObject obj = null;
 		String account = cp5.get(Textfield.class, "Account").getText();
@@ -82,7 +83,7 @@ public class LoginPanel extends PApplet{
 		} else {
 			if (obj.getString("password").equals(password)) {
 				System.out.println("password correct");
-				pass = true;
+				loginpass = true;
 			} else {
 				message = 2;
 			}
@@ -90,7 +91,7 @@ public class LoginPanel extends PApplet{
 
 		System.out.println(password);
 		System.out.println(account);
-		if(pass){
+		if(loginpass){
 			frame.setVisible(false);
 			stop();
 		}
@@ -149,6 +150,6 @@ public class LoginPanel extends PApplet{
 				text("Can't use this account",100,370);
 				break;
 		}
-		
+
 	}
 }

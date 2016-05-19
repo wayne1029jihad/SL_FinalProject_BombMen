@@ -10,9 +10,8 @@ import javax.swing.JFrame;
 * @version 1.0
 * @since   2016-04-26 
 */
-@SuppressWarnings("serial")
 public class Main extends JFrame{
-	
+	private static final long serialVersionUID = 1L;
 	private final static int windowWidth = 1200, windowHeight = 670;
 	
 	public static void main(String [] args){
