@@ -72,9 +72,9 @@ public abstract class AbstractCharacter extends JPanel{
 	public int getPowerTimes(){
 		return powertimes;
 	}
-	public void Move(int px, int py){
+	/*public void Move(int px, int py){
 		x = px;
 		y = py;
-	}
+	}*/
 	
 }

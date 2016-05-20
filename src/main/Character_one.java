@@ -22,6 +22,9 @@ public class Character_one extends AbstractCharacter{
 	private String s;
 	public Direction d = Direction.DOWN;
 	
+	public int boxweight = 45, boxheight = 40;
+	public int next_x = 0, next_y = 0;
+	
 	public Character_one(GameStage g){
 		initial(g);
 		//super.setSkill(new Punch());
@@ -38,7 +41,6 @@ public class Character_one extends AbstractCharacter{
 		
 		try{
 			//image = ImageIO.read(new File("src\\angry_bird.jpg") );
-			
 			if(d == Direction.DOWN){
 				image = gs.loadImage("angry_bird.jpg");
 			}
