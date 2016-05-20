@@ -9,27 +9,35 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import processing.core.PImage;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class Character_one extends AbstractCharacter{
-	public BufferedImage image = null;
+	public PImage image = null;
 	public Image ima;
 	private String s;
 	
 	public Character_one(GameStage g){
-		initial();
+		initial(g);
 		//super.setSkill(new Punch());
 	}
 	public String getName(){
 		s = "Player1";
 		return s;
 	}
-	public void initial(){
+	public void initial(GameStage gs){
 		getName();
 		setActive();
 		setStartScore();
 		setPowerTimes();
 		
 		try{
-			image = ImageIO.read(new File("src\\angry_bird.jpg") );
+			//image = ImageIO.read(new File("src\\angry_bird.jpg") );
+			image = gs.loadImage("angry_bird.jpg");
 		}catch(Exception ex){
 			System.out.println("NO EXAMPLE.JPG");
 		}

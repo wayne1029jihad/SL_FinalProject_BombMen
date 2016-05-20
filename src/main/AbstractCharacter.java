@@ -5,15 +5,17 @@ import java.util.Vector;
 
 import javax.swing.JPanel;
 
+import processing.core.PImage;
+
 public abstract class AbstractCharacter extends JPanel{
 	private boolean isActive;
 	//private Type type;
 	private Vector<AbstractSkill> skills = new Vector<AbstractSkill>();
-	private BufferedImage image;
+	private PImage image;
 	
 	protected GameStage gs;
 	abstract public String getName();
-	abstract public void initial();
+	abstract public void initial(GameStage s);
 	
 	private int NOW_SCORE, WIN_SCORE;
 	
@@ -30,10 +32,10 @@ public abstract class AbstractCharacter extends JPanel{
 	public boolean isActive(){
 		return isActive;
 	}
-	public void setImage(BufferedImage bi){
+	public void setImage(PImage bi){
 		image = bi;
 	}
-	public Image getImage(){
+	public PImage getImage(){
 		return image;
 	}
 	public void setSkill(AbstractSkill s){
