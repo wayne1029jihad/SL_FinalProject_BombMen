@@ -20,6 +20,7 @@ public class Character_one extends AbstractCharacter{
 	public PImage image = null;
 	public Image ima;
 	private String s;
+	public Direction d = Direction.DOWN;
 	
 	public Character_one(GameStage g){
 		initial(g);
@@ -37,7 +38,20 @@ public class Character_one extends AbstractCharacter{
 		
 		try{
 			//image = ImageIO.read(new File("src\\angry_bird.jpg") );
-			image = gs.loadImage("angry_bird.jpg");
+			
+			if(d == Direction.DOWN){
+				image = gs.loadImage("angry_bird.jpg");
+			}
+			else if(d == Direction.UP){
+				image = gs.loadImage("angry_bird.jpg");
+			}
+			else if(d == Direction.LEFT){
+				image = gs.loadImage("left.jpg");
+			}
+			else if(d == Direction.RIGHT){
+				image = gs.loadImage("right.jpg");
+			}
+			
 		}catch(Exception ex){
 			System.out.println("NO EXAMPLE.JPG");
 		}
