@@ -2,10 +2,11 @@ package main;
 import java.awt.image.BufferedImage;
 
 public abstract class AbstractSkill {
-	private int power,accuracy;
+	private int power,accuracy;//what accuracy use to?
 	private BufferedImage bomb,fire; 
 	int number;//the number of bombs
 	int bombX,bombY;
+	private int state; 
 	protected GameStage gs;
 	abstract public void initial(int num,int power,int accuracy,BufferedImage bomb,BufferedImage fire);
 	public void setPower(int p){

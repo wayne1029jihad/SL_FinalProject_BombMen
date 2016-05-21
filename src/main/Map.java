@@ -10,7 +10,7 @@ import processing.core.PImage;
 public class Map implements Map_interface{//
 	private Character characters1;//for test
 	private Character characters2;//for test
-	PImage ch1,ch2;//for test wait for character
+	PImage ch;//for test wait for character
 	private GameStage gs;
 	private int boxweight = 45;
 	private int boxheight = 40;
@@ -37,11 +37,9 @@ public class Map implements Map_interface{//
 		wall = gs.loadImage("wall.png");
 		readerfile("src/data/grass.txt",weight);
 	}
-	public void loadcharacter()
+	public void loadcharacter(String name)
 	{
-		ch1 = gs.loadImage("CH1_front.png");
-		ch2 = gs.loadImage("CH2_front.png");
-
+		ch = gs.loadImage(name+"_front.png");
 	}
 	public void setBomb(int state)
 	{
@@ -51,10 +49,24 @@ public class Map implements Map_interface{//
 			bomb = gs.loadImage("bump_s.png");
 		else
 			bomb = gs.loadImage("bump.png");
-		draw();//display();		
+		display();		
 	}
-	//public void display()
-	public void draw()
+	public void setCharacter(Direction t ,String name)
+	{
+		if(t == Direction.UP)
+			ch = gs.loadImage(name+"_back.png");
+		else if(t == Direction.RIGHT)
+			ch = gs.loadImage(name+"_right.png");
+		else if(t == Direction.RIGHTGO)
+			ch = gs.loadImage(name+"_right_go.png");
+		else if(t == Direction.LEFTGO)
+			ch = gs.loadImage(name+"_left_go.png");
+		else if(t == Direction.LEFT)
+			ch = gs.loadImage(name+"_left.png");
+		else
+			ch = gs.loadImage(name+"_front.png");
+	}
+	public void display()
 	{
 		int i;
 		for(i = 0; i < height*weight; i++)
@@ -70,6 +82,9 @@ public class Map implements Map_interface{//
 				case 3:
 					gs.image(bomb, (i%weight)*boxweight, (i/weight)*boxheight,boxweight,boxheight);
 					break;
+				case 4:
+					gs.image(ch, (i%weight)*boxweight, (i/weight)*boxheight,boxweight,boxheight);
+					break;
 				case 8:
 					gs.image(wall, (i%weight)*boxweight, (i/weight)*boxheight,boxweight,boxheight);
 					break;
@@ -78,9 +93,9 @@ public class Map implements Map_interface{//
 			}
 		}
 	}
-	public void ChangeByUser(int x, int y , int type)
+	public void ChangeByUser(int x, int y , int maptype)
 	{
-		map[weight*y+x] = type;
+		map[weight*y+x] = maptype;
 	}
 	
 	public void readerfile(String filename, int weight) 
@@ -105,4 +120,11 @@ public class Map implements Map_interface{//
 	    	ioe.printStackTrace();
 	    }   
 	 }	
+	public boolean obstacledetect(int X,int Y)
+	{
+		if(map[X+weight*Y] != 0)
+			return false;
+		else
+			return true;	
+	}
 }

@@ -20,7 +20,7 @@ public class GameStage extends PApplet implements KeyListener{
 	private ControlP5 cp5;
 	private LoginPanel login = new LoginPanel();
 	private Map gamemap = new Map(this,15,13);
-	private Character_one ch1 = new Character_one(this);
+	private Character_one ch1 = new Character_one(this,"ch1");
 	
 	public void setup() {
 		size(width, height);
@@ -49,7 +49,7 @@ public class GameStage extends PApplet implements KeyListener{
 		if(login.loginpass){
 			cp5.get(Button.class, "btn1").hide();
 			cp5.get(Button.class, "btn2").hide();
-			gamemap.draw();
+			gamemap.display();
 		}
 	}
 	
@@ -78,10 +78,8 @@ public class GameStage extends PApplet implements KeyListener{
 			if(ch1.next_x < 1185){
 				ch1.next_x += 15;
 			}
-		}
-		//this.draw(ch1.ima, ch1.next_x,ch1.next_y);
-		
-		repaint();
+		}		
+		draw();
 	}
 	
 	public void keyTyped(KeyEvent e){}

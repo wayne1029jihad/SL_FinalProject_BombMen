@@ -9,7 +9,7 @@ import processing.core.PImage;
 
 public abstract class AbstractCharacter extends JPanel{
 	private boolean isActive;
-	//private Type type;
+	
 	private Vector<AbstractSkill> skills = new Vector<AbstractSkill>();
 	private PImage image;
 	
@@ -44,12 +44,7 @@ public abstract class AbstractCharacter extends JPanel{
 	public Vector<AbstractSkill> getSkills(){
 		return skills;
 	}
-	/*public void setType(Type t){
-		type = t;
-	}
-	public Type getType(){
-		return type;
-	}*/
+	
 	public void setStartScore(){
 		NOW_SCORE = 0;
 	}
@@ -72,9 +67,9 @@ public abstract class AbstractCharacter extends JPanel{
 	public int getPowerTimes(){
 		return powertimes;
 	}
-	/*public void Move(int px, int py){
+	public void Move(int px, int py){
 		x = px;
 		y = py;
-	}*/
+	}
 	
 }

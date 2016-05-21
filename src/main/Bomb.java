@@ -6,9 +6,9 @@ import java.util.TimerTask;
 public class Bomb extends AbstractSkill{
 	TimerTask changeToFire;
 	Timer timer;
+	private Bombtype type;
 	@Override
 	public void initial(int num,int power,int accuracy,BufferedImage bomb,BufferedImage fire) {
-		// TODO Auto-generated method stub
 		setNumber(num);
 		setAccuracy(accuracy);
 		setPower(power);
@@ -23,7 +23,7 @@ public class Bomb extends AbstractSkill{
 			//setBombY(ch.getY());
 			changeToFire=new TimerTask()
 					{
-						//�敶�蔭���耦閬��
+						//�?��?��??����?�?�閬�?���?
 						@Override
 						public void run() {
 							// TODO Auto-generated method stub
@@ -36,7 +36,7 @@ public class Bomb extends AbstractSkill{
 			{
 				for(int y=getBombY()-getAccuracy();y<=getBombY()+getAccuracy();y++)
 				{
-					//�霈�敺敶蔣�蝭���耦
+					//��??��?��?敺?�?��???��蝭?��?��?���?
 					if((x-getBombX())*(x-getBombX())+(y-getBombY())*(y-getBombY())<=getAccuracy()*getAccuracy())
 					{
 						
@@ -47,6 +47,12 @@ public class Bomb extends AbstractSkill{
 		}
 		
 	}
-	
+	public void setType(Bombtype t){
+		type = t;
+	}
+	public Bombtype getType(){
+		return type;
+	}
+		
 	
 }
