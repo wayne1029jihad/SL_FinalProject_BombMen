@@ -28,6 +28,7 @@ public class Character_one extends AbstractCharacter{
 	public Character_one(GameStage g, String name){
 		initial(g);
 		s = name;
+		
 		//super.setSkill(new Punch());
 	}
 	public String getName(){

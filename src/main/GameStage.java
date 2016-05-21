@@ -55,29 +55,41 @@ public class GameStage extends PApplet implements KeyListener{
 	
 	public void KeyPresses(KeyEvent e){//press W, A, S, D
 		int key1 = e.getKeyCode();
+		
+		ch1.record_direction[0] = ch1.next_x;
+		ch1.record_direction[1] = ch1.next_y;
+		
 		if(key1 == java.awt.event.KeyEvent.VK_A){
-			ch1.d = Direction.LEFT;
+			ch1.d = Direction.LEFTGO;
 			if(ch1.next_x >= 15){// at least at 1 block
 				ch1.next_x -= 15;
 			}
+			ch1.record_direction[2] = ch1.next_x;
+			ch1.record_direction[3] = ch1.next_y;
 		}
 		else if(key1 == java.awt.event.KeyEvent.VK_S){
 			ch1.d = Direction.DOWN;
 			if(ch1.next_y <= 637){
 				ch1.next_y += 13;
 			}
+			ch1.record_direction[2] = ch1.next_x;
+			ch1.record_direction[3] = ch1.next_y;
 		}
 		else if(key1 == java.awt.event.KeyEvent.VK_W){
 			ch1.d = Direction.UP;
 			if(ch1.next_y >= 13){
 				ch1.next_y -= 13;
 			}
+			ch1.record_direction[2] = ch1.next_x;
+			ch1.record_direction[3] = ch1.next_y;
 		}
 		else if(key1 == java.awt.event.KeyEvent.VK_D){
-			ch1.d = Direction.RIGHT;
+			ch1.d = Direction.RIGHTGO;
 			if(ch1.next_x < 1185){
 				ch1.next_x += 15;
 			}
+			ch1.record_direction[2] = ch1.next_x;
+			ch1.record_direction[3] = ch1.next_y;
 		}		
 		draw();
 	}

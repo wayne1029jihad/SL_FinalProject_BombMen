@@ -16,12 +16,14 @@ public abstract class AbstractCharacter extends JPanel{
 	protected GameStage gs;
 	abstract public String getName();
 	abstract public void initial(GameStage s);
+	abstract public void setCharacter(Direction d, String name);
 	
 	private int NOW_SCORE, WIN_SCORE;
 	
-	public int x,y;
+	//public int x,y;
 	public int powertimes;
-	
+	public int next_x = 0, next_y = 0;
+	public int record_direction[] = new int[4];////To record the origin movement and next movement (x1, y1) & (x2, y2)
 	
 	public void setActive(){
 		isActive = true;
@@ -67,9 +69,9 @@ public abstract class AbstractCharacter extends JPanel{
 	public int getPowerTimes(){
 		return powertimes;
 	}
-	public void Move(int px, int py){
+	/*public void Move(int px, int py){
 		x = px;
 		y = py;
-	}
+	}*/
 	
 }

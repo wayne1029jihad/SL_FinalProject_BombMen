@@ -5,11 +5,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import javax.swing.JPanel;
+
 import processing.core.PImage;
 
 public class Map implements Map_interface{//
-	private Character characters1;//for test
-	private Character characters2;//for test
+	private Character_one characters1;//for test
+	private Character_one characters2;//for test
 	PImage ch;//for test wait for character
 	private GameStage gs;
 	private int boxweight = 45;
@@ -65,6 +67,24 @@ public class Map implements Map_interface{//
 			ch = gs.loadImage(name+"_left.png");
 		else
 			ch = gs.loadImage(name+"_front.png");
+		
+		////Use to differentiate the right & right_go
+		////Use to differentiate the left & left_go
+		if(characters1.record_direction[1] == characters1.record_direction[3]){
+			if(characters1.record_direction[0] >= characters1.record_direction[2]){
+				characters1.d = Direction.LEFTGO;
+			}
+			else{
+				characters1.d = Direction.RIGHTGO;
+			}
+		}
+		
+		if(name == "CH1"){
+			gs.image(ch, characters1.next_x, characters1.next_y);
+		}
+		else if(name == "CH2"){
+			gs.image(ch, characters2.next_x, characters2.next_y);
+		}
 	}
 	public void display()
 	{
