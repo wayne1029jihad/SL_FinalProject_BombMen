@@ -10,6 +10,8 @@ import java.awt.*;
 
 import controlP5.Button;
 import controlP5.ControlP5;
+
+import java.util.Timer;
 /**
 * This class is for sketching outcome using Processing
 * You can do major UI control and some visualization in this class.
@@ -19,8 +21,10 @@ public class GameStage extends PApplet implements KeyListener{
 	private final static int width = 1200, height = 650;
 	private ControlP5 cp5;
 	private LoginPanel login = new LoginPanel();
-	private Map gamemap;
+	public Map gamemap;
 	public Character_one ch1; 
+	private boolean pressed = false;
+	private Timer timer = new Timer();
 	
 	public void setup() {
 		size(width, height);
@@ -36,9 +40,10 @@ public class GameStage extends PApplet implements KeyListener{
 		cp5.get(Button.class, "btn2").getCaptionLabel().setFont(createFont("Arial",20,true));
 		
 		addKeyListener(this);
-		ch1= new Character_one(this,"CH1",1,1);
+		ch1= new Character_one(this,"CH1",1,1,1);
 		gamemap = new Map(this,15,13);
 		gamemap.ChangeByUser(1,1,4);
+		timer.schedule(ch1.bomb, 0, 450);
 		
 	}
 	public void game()
@@ -58,59 +63,75 @@ public class GameStage extends PApplet implements KeyListener{
 		background(40,160,110);
 		if(login.loginpass){
 			cp5.get(Button.class, "btn1").hide();
-		//	cp5.get(Button.class, "btsn2").hide();
+			cp5.get(Button.class, "btn2").hide();
 			gamemap.display();
+		}
+		if(ch1.bomb.getCount() == 10)
+		{
+			System.out.println("bombreset");
+			//timer.purge();
+			ch1.bomb.resetCount();			
 		}
 	}
 	
 	
 	public void keyPressed(KeyEvent e){//press W, A, S, D
 		int key1 = e.getKeyCode();
-		if(key1 == java.awt.event.KeyEvent.VK_A){
-			ch1.d = Direction.LEFT;
-			if(gamemap.NoObstacle(ch1.next_x-1, ch1.next_y)){// at least at 1 block, use matrix to put character
-				if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
-					gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 0);
-				ch1.next_x --;
-				ch1.Move(ch1.next_x, ch1.next_y);
-				gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 4);
-			}			
-		}
-		else if(key1 == java.awt.event.KeyEvent.VK_S){
-			ch1.d = Direction.DOWN;
-			if(gamemap.NoObstacle(ch1.next_x, ch1.next_y+1)){// at least at 1 block, use matrix to put character
-				if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
-					gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 0);
-				ch1.next_y++;
-				ch1.Move(ch1.next_x, ch1.next_y);
-				gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 4);
-			}			
-		}
-		else if(key1 == java.awt.event.KeyEvent.VK_W){
-			ch1.d = Direction.UP;
-			if(gamemap.NoObstacle(ch1.next_x, ch1.next_y-1)){// at least at 1 block, use matrix to put character
-				if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
-					gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 0);
-				ch1.next_y--;
-				ch1.Move(ch1.next_x, ch1.next_y);
-				gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 4);
-			}			
-		}
-		else if(key1 == java.awt.event.KeyEvent.VK_D){
-			ch1.d = Direction.RIGHT;
-			if(gamemap.NoObstacle(ch1.next_x+1, ch1.next_y)){// at least at 1 block, use matrix to put character
-				if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
-					gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 0);
-				ch1.next_x ++;
-				ch1.Move(ch1.next_x, ch1.next_y);
-				gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 4);
-			}
-		}
-		else if(key1 == java.awt.event.KeyEvent.VK_SPACE)
+		if(pressed == false)
 		{
-			gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 3);
+			pressed = true;
+			if(key1 == java.awt.event.KeyEvent.VK_A){
+				ch1.d = Direction.LEFT;
+				gamemap.setCharacter(ch1.d, ch1.getName());
+				if(gamemap.NoObstacle(ch1.next_x-1, ch1.next_y) ||gamemap.getoneboxmap(ch1.next_x-1, ch1.next_y) == 4 ){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
+					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)	
+						gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 0);
+					ch1.next_x --;
+					gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 4);
+				}			
+			}
+			else if(key1 == java.awt.event.KeyEvent.VK_S){
+				ch1.d = Direction.DOWN;
+				gamemap.setCharacter(ch1.d, ch1.getName());
+				if(gamemap.NoObstacle(ch1.next_x, ch1.next_y+1) ||gamemap.getoneboxmap(ch1.next_x, ch1.next_y+1) == 4 ){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
+					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)	
+						gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 0);
+					ch1.next_y++;
+					gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 4);
+				}			
+			}
+			else if(key1 == java.awt.event.KeyEvent.VK_W){
+				ch1.d = Direction.UP;
+				gamemap.setCharacter(ch1.d, ch1.getName());
+				if(gamemap.NoObstacle(ch1.next_x, ch1.next_y-1) ||(gamemap.getoneboxmap(ch1.next_x, ch1.next_y-1) == 4 )){// at least at 1 block, use matrix to put character
+					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
+						gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 0);
+					ch1.next_y--;
+					gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 4);
+				}			
+			}
+			else if(key1 == java.awt.event.KeyEvent.VK_D){
+				ch1.d = Direction.RIGHT;
+				gamemap.setCharacter(ch1.d, ch1.getName());
+				if(gamemap.NoObstacle(ch1.next_x+1, ch1.next_y) || (gamemap.getoneboxmap(ch1.next_x+1, ch1.next_y) == 4) ){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
+					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)	
+						gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 0);
+					ch1.next_x ++;
+					gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 4);
+				}
+			}
+			else if(key1 == java.awt.event.KeyEvent.VK_SPACE)
+			{
+				gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 3);
+				ch1.bomb.setBombPosition(ch1.next_x,ch1.next_y);
+				ch1.bomb.startBomb();
+			}
+			draw();
 		}
-		draw();
+	}
+	public void	keyReleased()
+	{
+		pressed = false;
 	}
 	
 	public void keyTyped(KeyEvent e){}

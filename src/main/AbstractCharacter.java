@@ -8,20 +8,13 @@ import javax.swing.JPanel;
 import processing.core.PImage;
 
 public abstract class AbstractCharacter extends JPanel{
-	private boolean isActive;
-	
-	private Vector<AbstractSkill> skills = new Vector<AbstractSkill>();
-	private PImage image;
-	
+	private Vector<AbstractSkill> skills = new Vector<AbstractSkill>();	
 	protected GameStage gs;
+	private boolean isActive;
 	abstract public String getName();
-	abstract public void initial(GameStage s);
-	
+	abstract public void initial(GameStage g,int num);;
 	private int NOW_SCORE, WIN_SCORE;
-	
-	public int x,y;
-	public int powertimes;
-	
+	private int powertimes;	
 	
 	public void setActive(){
 		isActive = true;
@@ -32,19 +25,12 @@ public abstract class AbstractCharacter extends JPanel{
 	public boolean isActive(){
 		return isActive;
 	}
-	public void setImage(PImage bi){
-		image = bi;
-	}
-	public PImage getImage(){
-		return image;
-	}
 	public void setSkill(AbstractSkill s){
 		skills.add(s);
 	}
 	public Vector<AbstractSkill> getSkills(){
 		return skills;
-	}
-	
+	}	
 	public void setStartScore(){
 		NOW_SCORE = 0;
 	}
@@ -66,10 +52,6 @@ public abstract class AbstractCharacter extends JPanel{
 	}
 	public int getPowerTimes(){
 		return powertimes;
-	}
-	public void Move(int px, int py){
-		x = px;
-		y = py;
 	}
 	
 }

@@ -16,7 +16,7 @@ public class Map implements Map_interface{//
 	private int boxheight = 40;
 	private int weight, height;
 	private int []map;
-	PImage background,obstacle,obstacle_break,wall,floor,bomb;
+	PImage background,obstacle,obstacle_break,wall,floor,bomb,fire;
 	
 	static BufferedReader br = null;//read bit map 	
 	
@@ -33,6 +33,7 @@ public class Map implements Map_interface{//
 	public void loadmap()
 	{
 		floor = gs.loadImage("floor.png");
+		fire = gs.loadImage("fire.png");
 		obstacle = gs.loadImage("obstacle.png");//this png not in source
 		obstacle_break = gs.loadImage("obstacle_break.png");
 		wall = gs.loadImage("wall.png");
@@ -44,11 +45,11 @@ public class Map implements Map_interface{//
 	{
 		ch = gs.loadImage(name+"_front.png");
 	}
-	public void setBomb(int state)
+	public void setBomb(Bombtype type)
 	{
-		if(state == 2)
+		if(type == Bombtype.bump_red)
 			bomb = gs.loadImage("bump_red.png");
-		else if(state == 1)
+		else if(type == Bombtype.bump_s)
 			bomb = gs.loadImage("bump_s.png");
 		else
 			bomb = gs.loadImage("bump.png");
@@ -88,6 +89,9 @@ public class Map implements Map_interface{//
 				case 4:
 					gs.image(ch, (i%weight)*boxweight, (i/weight)*boxheight,boxweight,boxheight);
 					break;
+				case 5:
+					gs.image(fire, (i%weight)*boxweight, (i/weight)*boxheight,boxweight,boxheight);
+					break;
 				case 8:
 					gs.image(wall, (i%weight)*boxweight, (i/weight)*boxheight,boxweight,boxheight);
 					break;
@@ -96,9 +100,10 @@ public class Map implements Map_interface{//
 			}
 		}
 	}
-	public void ChangeByUser(int x, int y , int maptype)
+	public void ChangeByUser(int X, int Y , int maptype)
 	{
-		map[weight*y+x] = maptype;
+		if(X+weight*Y >= 0 && X+weight*Y < weight*height)
+			map[X+weight*Y] = maptype;
 	}
 	
 	public void readerfile(String filename, int weight) 
@@ -123,13 +128,21 @@ public class Map implements Map_interface{//
 	 }	
 	public boolean NoObstacle(int X,int Y)
 	{
-		if(map[X+weight*Y] == 0)
-			return true;
+		if(X+weight*Y >= 0 && X+weight*Y < weight*height)
+		{
+			if(map[X+weight*Y] == 0)
+				return true;
+			else
+				return false;	
+		}
 		else
-			return false;	
+			return true;
 	}
 	public int getoneboxmap(int X,int Y)
 	{
-		return map[X+weight*Y];
+		if(X+weight*Y >= 0 && X+weight*Y < weight*height)
+			return map[X+weight*Y];
+		else
+			return -1;
 	}
 }

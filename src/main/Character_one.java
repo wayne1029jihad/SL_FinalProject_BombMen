@@ -18,16 +18,14 @@ import java.io.InputStreamReader;
 
 public class Character_one extends AbstractCharacter{
 	public PImage image = null;
-	public Image ima;
 	private String s;
-	private int now_x,now_y;//character
 	public Direction d;
-	
-	public int boxweight = 45, boxheight = 40;
 	public int next_x = 0, next_y = 0;
+	public Bomb bomb;
+	private int number;//the number of bombs
 	
-	public Character_one(GameStage g, String name, int initial_X, int initial_Y){
-		initial(g);
+	public Character_one(GameStage g, String name, int initial_X, int initial_Y, int num){
+		initial(g,num);
 		s = name;
 		next_x = initial_X;
 		next_y = initial_Y;
@@ -36,28 +34,21 @@ public class Character_one extends AbstractCharacter{
 	public String getName(){
 		return s;
 	}
-	public void initial(GameStage gs){
+	public void initial(GameStage gs, int num){
 		//getName();//before you use this to get player1 but every one are different name decide by server
+		setNumber(num);
 		setActive();
 		setStartScore();
 		setPowerTimes();
+		bomb = new Bomb(1,3,gs);
 		//setCharacter(Direction.DOWN,"ch1");
 	}
-	/*
-	public void setCharacter(Direction t ,String name)
+	public void setNumber(int num)
 	{
-		 gs.println(gs.dataPath(""));
-		if(t == Direction.UP)
-			image = gs.loadImage(name+"_back.png");
-		else if(t == Direction.RIGHT)
-			image = gs.loadImage(name+"_right.png");
-		else if(t == Direction.RIGHTGO)
-			image = gs.loadImage(name+"_right_go.png");
-		else if(t == Direction.LEFTGO)
-			image = gs.loadImage(name+"_left_go.png");
-		else if(t == Direction.LEFT)
-			image = gs.loadImage(name+"_left.png");
-		else
-			image = gs.loadImage(name+"_front.png");
-	}*/
+		this.number=num;
+	}
+	public int getNumber()
+	{
+		return this.number;
+	}
 }
