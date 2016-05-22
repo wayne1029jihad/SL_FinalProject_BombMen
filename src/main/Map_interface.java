@@ -7,5 +7,6 @@ public interface Map_interface  {
 	public void readerfile(String filename, int weight); 
 	public void setBomb(int state);
 	public void loadcharacter(String name);
-	public boolean obstacledetect(int X,int Y);
+	public boolean NoObstacle(int X,int Y);
+	public int getoneboxmap(int X,int Y);
 }

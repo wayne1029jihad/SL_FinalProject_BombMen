@@ -5,13 +5,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import javax.swing.JPanel;
-
 import processing.core.PImage;
 
 public class Map implements Map_interface{//
-	private Character_one characters1;//for test
-	private Character_one characters2;//for test
+	private Character characters1;//for test
+	private Character characters2;//for test
 	PImage ch;//for test wait for character
 	private GameStage gs;
 	private int boxweight = 45;
@@ -30,6 +28,7 @@ public class Map implements Map_interface{//
 		this.gs = gs;
 		map = new int[weight*height]; 
 		loadmap();
+		loadcharacter(gs.ch1.getName());
 	}
 	public void loadmap()
 	{
@@ -37,7 +36,9 @@ public class Map implements Map_interface{//
 		obstacle = gs.loadImage("obstacle.png");//this png not in source
 		obstacle_break = gs.loadImage("obstacle_break.png");
 		wall = gs.loadImage("wall.png");
-		readerfile("src/data/grass.txt",weight);
+		gs.println(gs.dataPath(""));
+		bomb = gs.loadImage("bump_red.png");
+		readerfile("data/grass.txt",weight);
 	}
 	public void loadcharacter(String name)
 	{
@@ -67,24 +68,6 @@ public class Map implements Map_interface{//
 			ch = gs.loadImage(name+"_left.png");
 		else
 			ch = gs.loadImage(name+"_front.png");
-		
-		////Use to differentiate the right & right_go
-		////Use to differentiate the left & left_go
-		if(characters1.record_direction[1] == characters1.record_direction[3]){
-			if(characters1.record_direction[0] >= characters1.record_direction[2]){
-				characters1.d = Direction.LEFTGO;
-			}
-			else{
-				characters1.d = Direction.RIGHTGO;
-			}
-		}
-		
-		if(name == "CH1"){
-			gs.image(ch, characters1.next_x, characters1.next_y);
-		}
-		else if(name == "CH2"){
-			gs.image(ch, characters2.next_x, characters2.next_y);
-		}
 	}
 	public void display()
 	{
@@ -127,11 +110,9 @@ public class Map implements Map_interface{//
 	      br = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));//new a input stream and set format
 	      String in = null;// initial in string to null
 	      while((in = br.readLine()) != null){	//if still get line form file	    	   
-	             System.out.println(in);
 	             trans  = in.split(" ");
 	             for(i = 0;i < weight ;i++)
 	             {
-	            	 System.out.println(Integer.valueOf(trans[i]));
 	            	 map[i+weight*j] = Integer.valueOf(trans[i]);
 	             }
 	        j++;
@@ -140,11 +121,15 @@ public class Map implements Map_interface{//
 	    	ioe.printStackTrace();
 	    }   
 	 }	
-	public boolean obstacledetect(int X,int Y)
+	public boolean NoObstacle(int X,int Y)
 	{
-		if(map[X+weight*Y] != 0)
-			return false;
+		if(map[X+weight*Y] == 0)
+			return true;
 		else
-			return true;	
+			return false;	
+	}
+	public int getoneboxmap(int X,int Y)
+	{
+		return map[X+weight*Y];
 	}
 }

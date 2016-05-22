@@ -20,15 +20,17 @@ public class Character_one extends AbstractCharacter{
 	public PImage image = null;
 	public Image ima;
 	private String s;
-	public Direction d = Direction.DOWN;
+	private int now_x,now_y;//character
+	public Direction d;
 	
 	public int boxweight = 45, boxheight = 40;
 	public int next_x = 0, next_y = 0;
 	
-	public Character_one(GameStage g, String name){
+	public Character_one(GameStage g, String name, int initial_X, int initial_Y){
 		initial(g);
 		s = name;
-		
+		next_x = initial_X;
+		next_y = initial_Y;
 		//super.setSkill(new Punch());
 	}
 	public String getName(){
@@ -39,9 +41,12 @@ public class Character_one extends AbstractCharacter{
 		setActive();
 		setStartScore();
 		setPowerTimes();
+		//setCharacter(Direction.DOWN,"ch1");
 	}
+	/*
 	public void setCharacter(Direction t ,String name)
 	{
+		 gs.println(gs.dataPath(""));
 		if(t == Direction.UP)
 			image = gs.loadImage(name+"_back.png");
 		else if(t == Direction.RIGHT)
@@ -54,5 +59,5 @@ public class Character_one extends AbstractCharacter{
 			image = gs.loadImage(name+"_left.png");
 		else
 			image = gs.loadImage(name+"_front.png");
-	}
+	}*/
 }
