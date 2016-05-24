@@ -3,6 +3,7 @@ package main;
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.event.KeyEvent;
+import sun.audio.AudioPlayer;
 
 import java.awt.event.KeyListener;
 import java.applet.*;
@@ -14,6 +15,9 @@ import controlP5.ControlP5;
 
 import java.util.Timer;
 import controlP5.Textfield;
+import ddf.minim.*;
+import ddf.minim.analysis.*;
+
 /**
 * This class is for sketching outcome using Processing
 * You can do major UI control and some visualization in this class.
@@ -29,7 +33,9 @@ public class GameStage extends PApplet implements KeyListener{
 	private Timer timer = new Timer();
 	Textarea myTextarea;
 	public String chatword;
-	
+	Minim minim;
+	ddf.minim.AudioPlayer song;
+
 	public void setup() {
 		size(width, height);
 		smooth();
@@ -59,14 +65,20 @@ public class GameStage extends PApplet implements KeyListener{
 		                  .setLineHeight(14)
 		                  .setColor(color(128))
 		                  .setColorBackground(color(255))
-		                  .setColorForeground(color(255)).hide();
-
+		                  .setColorForeground(color(255))
+		                  .scroll(1)
+		                  .showScrollbar().hide();
 		 
 		//addKeyListener(this);
 		ch1= new Character_one(this,"CH1",1,1,1);
 		gamemap = new Map(this,15,13);
 		gamemap.ChangeByUser(1,1,4);
 		timer.schedule(ch1.bomb, 0, 450);
+		
+		//add music
+		minim=new Minim(this);
+		song=minim.loadFile("song/file.mp3");
+		song.play();
 					
 		
 	}
@@ -111,6 +123,7 @@ public class GameStage extends PApplet implements KeyListener{
 			text("Let's chat~", 695, 125); 
 			cp5.get(Textarea.class, "txt").setFont(createFont("Arial",20,true)).show();
 			cp5.get(Textfield.class, "space").setFont(createFont("Arial",20,true)).show();
+
 		}
 		if(ch1.bomb.getCount() == 10)
 		{
@@ -122,7 +135,7 @@ public class GameStage extends PApplet implements KeyListener{
 	}
 	
 	
-	public void keyPressed(KeyEvent e){//press W, A, S, D
+	public void keyPressed(KeyEvent e){
 		int key1 = e.getKeyCode();
 		if(pressed == false)
 		{
@@ -176,7 +189,14 @@ public class GameStage extends PApplet implements KeyListener{
 			else if(key1== java.awt.event.KeyEvent.VK_ENTER)
 			{
 				chatword=cp5.get(Textfield.class, "space").getText();
-				myTextarea.setText(ch1.getName()+":"+chatword+"\n");
+				myTextarea.append(ch1.getName()+":"+chatword+"\n");
+			}
+			else if(key1==java.awt.event.KeyEvent.VK_PAUSE)
+			{
+				if(song.isPlaying())
+					song.pause();
+				else
+					song.play();
 			}
 			draw();
 		}
