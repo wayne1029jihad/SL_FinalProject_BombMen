@@ -15,7 +15,18 @@ public abstract class AbstractCharacter extends JPanel{
 	abstract public void initial(GameStage g,int num);;
 	private int NOW_SCORE, WIN_SCORE;
 	private int powertimes;	
-	
+	private int life=1;
+	public void setXP(int life)
+	{
+		this.life=life;
+		if(life==0)
+			isActive=false;
+		else isActive=true;
+	}
+	public int getXP()
+	{
+		return life;
+	}
 	public void setActive(){
 		isActive = true;
 	}
