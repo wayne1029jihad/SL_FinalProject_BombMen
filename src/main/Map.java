@@ -8,9 +8,6 @@ import java.io.InputStreamReader;
 import processing.core.PImage;
 
 public class Map implements Map_interface{//
-	private Character characters1;//for test
-	private Character characters2;//for test
-	PImage ch;//for test wait for character
 	private GameStage gs;
 	private int boxweight = 45;
 	private int boxheight = 40;
@@ -28,7 +25,6 @@ public class Map implements Map_interface{//
 		this.gs = gs;
 		map = new int[weight*height]; 
 		loadmap();
-		loadcharacter(gs.ch1.getName());
 	}
 	public void loadmap()
 	{
@@ -37,13 +33,9 @@ public class Map implements Map_interface{//
 		obstacle = gs.loadImage("obstacle.png");//this png not in source
 		obstacle_break = gs.loadImage("obstacle_break.png");
 		wall = gs.loadImage("wall.png");
-		gs.println(gs.dataPath(""));
+		//gs.println(gs.dataPath(""));
 		bomb = gs.loadImage("bump_red.png");
-		readerfile("data/grass.txt",weight);
-	}
-	public void loadcharacter(String name)
-	{
-		ch = gs.loadImage(name+"_front.png");
+		readerfile("src/data/grass.txt",weight);
 	}
 	public void setBomb(Bombtype type)
 	{
@@ -54,21 +46,6 @@ public class Map implements Map_interface{//
 		else
 			bomb = gs.loadImage("bump.png");
 		display();		
-	}
-	public void setCharacter(Direction t ,String name)
-	{
-		if(t == Direction.UP)
-			ch = gs.loadImage(name+"_back.png");
-		else if(t == Direction.RIGHT)
-			ch = gs.loadImage(name+"_right.png");
-		else if(t == Direction.RIGHTGO)
-			ch = gs.loadImage(name+"_right_go.png");
-		else if(t == Direction.LEFTGO)
-			ch = gs.loadImage(name+"_left_go.png");
-		else if(t == Direction.LEFT)
-			ch = gs.loadImage(name+"_left.png");
-		else
-			ch = gs.loadImage(name+"_front.png");
 	}
 	public void display()
 	{
@@ -85,9 +62,6 @@ public class Map implements Map_interface{//
 					break;
 				case 3:
 					gs.image(bomb, (i%weight)*boxweight, (i/weight)*boxheight,boxweight,boxheight);
-					break;
-				case 4:
-					gs.image(ch, (i%weight)*boxweight, (i/weight)*boxheight,boxweight,boxheight);
 					break;
 				case 5:
 					gs.image(fire, (i%weight)*boxweight, (i/weight)*boxheight,boxweight,boxheight);
