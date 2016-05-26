@@ -69,10 +69,9 @@ public class GameStage extends PApplet implements KeyListener{
 		                  .scroll(1)
 		                  .showScrollbar().hide();
 		 
-		//addKeyListener(this);
-		ch1= new Character_one(this,"CH1",1,1,1);
+
+		ch1= new Character_one(this,"CH1",45,40,1);
 		gamemap = new Map(this,15,13);
-		gamemap.ChangeByUser(1,1,4);
 		timer.schedule(ch1.bomb, 0, 450);
 		
 		//add music
@@ -138,7 +137,7 @@ public class GameStage extends PApplet implements KeyListener{
 		text("Let's chat~", 695, 125);
 		cp5.get(Textarea.class, "txt").setFont(createFont("Arial",20,true)).show();
 		cp5.get(Textfield.class, "space").setFont(createFont("Arial",20,true)).show();
-
+		ch1.draw();
 		
 	}
 	
@@ -148,48 +147,28 @@ public class GameStage extends PApplet implements KeyListener{
 		{
 			pressed = true;
 			if(key1 == java.awt.event.KeyEvent.VK_LEFT){
-				ch1.d = Direction.LEFT;
-				gamemap.setCharacter(ch1.d, ch1.getName());
-				if(gamemap.NoObstacle(ch1.next_x-1, ch1.next_y) ||gamemap.getoneboxmap(ch1.next_x-1, ch1.next_y) == 4 ){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
-					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)	
-						gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 0);
-					ch1.next_x --;
-					gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 4);
+				if(gamemap.NoObstacle(ch1.next_x/45-1, ch1.next_y/40)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
+					ch1.move(Direction.LEFT);
 				}			
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_DOWN){
-				ch1.d = Direction.DOWN;
-				gamemap.setCharacter(ch1.d, ch1.getName());
-				if(gamemap.NoObstacle(ch1.next_x, ch1.next_y+1) ||gamemap.getoneboxmap(ch1.next_x, ch1.next_y+1) == 4 ){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
-					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)	
-						gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 0);
-					ch1.next_y++;
-					gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 4);
+				if(gamemap.NoObstacle(ch1.next_x/45, ch1.next_y/40+1)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
+					ch1.move(Direction.DOWN);
 				}			
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_UP){
-				ch1.d = Direction.UP;
-				gamemap.setCharacter(ch1.d, ch1.getName());
-				if(gamemap.NoObstacle(ch1.next_x, ch1.next_y-1) ||(gamemap.getoneboxmap(ch1.next_x, ch1.next_y-1) == 4 )){// at least at 1 block, use matrix to put character
-					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
-						gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 0);
-					ch1.next_y--;
-					gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 4);
+				if(gamemap.NoObstacle(ch1.next_x/45, ch1.next_y/40-1)){// at least at 1 block, use matrix to put character
+					ch1.move(Direction.UP);
 				}			
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_RIGHT){
-				ch1.d = Direction.RIGHT;
-				gamemap.setCharacter(ch1.d, ch1.getName());
-				if(gamemap.NoObstacle(ch1.next_x+1, ch1.next_y) || (gamemap.getoneboxmap(ch1.next_x+1, ch1.next_y) == 4) ){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
-					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)	
-						gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 0);
-					ch1.next_x ++;
-					gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 4);
+				if(gamemap.NoObstacle(ch1.next_x/45+1, ch1.next_y/40)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
+					ch1.move(Direction.RIGHT);
 				}
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_SPACE)
 			{
-				gamemap.ChangeByUser(ch1.next_x, ch1.next_y, 3);
+				gamemap.ChangeByUser(ch1.next_x/45, ch1.next_y/40, 3);
 				ch1.bomb.setBombPosition(ch1.next_x,ch1.next_y);
 				ch1.bomb.startBomb();
 			}
@@ -205,7 +184,6 @@ public class GameStage extends PApplet implements KeyListener{
 				else
 					song.play();
 			}
-			draw();
 		}
 	}
 	public void	keyReleased()
