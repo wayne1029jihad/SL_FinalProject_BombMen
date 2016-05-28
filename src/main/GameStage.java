@@ -12,6 +12,7 @@ import controlP5.ControlP5;
 import java.util.Timer;
 import controlP5.Textfield;
 import ddf.minim.*;
+
 /**
 * This class is for sketching outcome using Processing
 * You can do major UI control and some visualization in this class.
