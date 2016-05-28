@@ -8,8 +8,6 @@ import java.io.InputStreamReader;
 import processing.core.PImage;
 
 public class Map implements Map_interface{//
-	private Character characters1;//for test
-	private Character characters2;//for test
 	PImage ch;//for test wait for character
 	private GameStage gs;
 	private int boxweight = 45;
@@ -39,7 +37,7 @@ public class Map implements Map_interface{//
 		wall = gs.loadImage("wall.png");
 		gs.println(gs.dataPath(""));
 		bomb = gs.loadImage("bump_red.png");
-		readerfile("data/grass.txt",weight);
+		readerfile("src/data/grass.txt",weight);
 	}
 	public void loadcharacter(String name)
 	{

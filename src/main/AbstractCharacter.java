@@ -1,19 +1,18 @@
 package main;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
+
 import java.util.Vector;
 
 import javax.swing.JPanel;
 
-import processing.core.PImage;
 
 public abstract class AbstractCharacter extends JPanel{
+	private static final long serialVersionUID = 1L;
 	private Vector<AbstractSkill> skills = new Vector<AbstractSkill>();	
 	protected GameStage gs;
 	private boolean isActive;
 	abstract public String getName();
 	abstract public void initial(GameStage g,int num);;
-	private int NOW_SCORE, WIN_SCORE;
+	private int NOW_SCORE;
 	private int powertimes;	
 	private int life=1;
 	public void setXP(int life)

@@ -1,14 +1,10 @@
 package main;
 
 import processing.core.PApplet;
-import processing.core.PFont;
 import processing.event.KeyEvent;
-import sun.audio.AudioPlayer;
 
 import java.awt.event.KeyListener;
-import java.applet.*;
 import controlP5.*;
-import java.awt.*;
 
 import controlP5.Button;
 import controlP5.ControlP5;
@@ -16,8 +12,6 @@ import controlP5.ControlP5;
 import java.util.Timer;
 import controlP5.Textfield;
 import ddf.minim.*;
-import ddf.minim.analysis.*;
-
 /**
 * This class is for sketching outcome using Processing
 * You can do major UI control and some visualization in this class.
@@ -32,6 +26,8 @@ public class GameStage extends PApplet implements KeyListener{
 	private boolean pressed = false;
 	private Timer timer = new Timer();
 	Textarea myTextarea;
+	private enum Gamestate {Init,Menu,GameStart};
+	private Gamestate gstat = Gamestate.Init;
 	public String chatword;
 	Minim minim;
 	ddf.minim.AudioPlayer song;
@@ -44,11 +40,15 @@ public class GameStage extends PApplet implements KeyListener{
 		cp5.addButton("btn1")
 		.setLabel("Login").setPosition(500, 100).setSize(200, 50);
 		cp5.get(Button.class, "btn1").getCaptionLabel().setFont(createFont("Arial",20,true));
-		
+
 		cp5.addButton("btn2")
 		.setLabel("Exit").setPosition(500, 300).setSize(200, 50);
 		cp5.get(Button.class, "btn2").getCaptionLabel().setFont(createFont("Arial",20,true));
-			
+
+		cp5.addButton("btn3")
+		.setLabel("Startgame").setPosition(500, 200).setSize(200, 50).hide();
+		cp5.get(Button.class, "btn3").getCaptionLabel().setFont(createFont("Arial",20,true));
+
 			cp5.addTextfield("space")
 			.setSize(400, 30)
 			.setFont(createFont("Arial",20,true))
@@ -83,12 +83,6 @@ public class GameStage extends PApplet implements KeyListener{
 		
 	}
 	
-	public void game()
-	{/*
-		ch1= new Character_one(this,"ch1",1,1);
-		gamemap.ChangeByUser(1,1,4);*/
-		
-	}
 	public void btn1(){
 		String []temp = {"LOGIN"};
 		runSketch(temp, login);
@@ -96,34 +90,22 @@ public class GameStage extends PApplet implements KeyListener{
 	public void btn2(){
 		exit();
 	}
+	public void btn3(){
+		if (gstat == Gamestate.Menu)
+			gstat = Gamestate.GameStart;
+	}
 	public void draw() {
 		background(40,160,110);
 		if(login.loginpass){
+			gstat = Gamestate.Menu;
+			login.loginpass = false;
 			cp5.get(Button.class, "btn1").hide();
 			cp5.get(Button.class, "btn2").hide();
-			gamemap.display();
-			
-			//introduction
-			fill(155,220,235);
-			rect(690, 5, 400, 100);	
-			noStroke();
-			
-			fill(0);	
-			textSize(19);
-			text("Introduction:", 695, 28);
-			text("Name:"+ch1.getName(), 695, 48); 
-			text("Score:"+ch1.getNowScore(), 695, 70); 
-			text("XP:"+ch1.getXP(), 695, 95); 
-			//chat
-			textSize(19);
-			fill(155,220,0);
-			rect(690, 105, 400, 30);	
-			noStroke();
-			fill(0);
-			text("Let's chat~", 695, 125); 
-			cp5.get(Textarea.class, "txt").setFont(createFont("Arial",20,true)).show();
-			cp5.get(Textfield.class, "space").setFont(createFont("Arial",20,true)).show();
-
+			cp5.get(Button.class, "btn3").show();
+		}
+		if (gstat == Gamestate.GameStart){
+			cp5.get(Button.class, "btn3").hide();
+			gamestart();
 		}
 		if(ch1.bomb.getCount() == 10)
 		{
@@ -133,7 +115,32 @@ public class GameStage extends PApplet implements KeyListener{
 		}
 		
 	}
-	
+	public void gamestart() {
+		gamemap.display();
+
+		//introduction
+		fill(155,220,235);
+		rect(690, 5, 400, 100);
+		noStroke();
+
+		fill(0);
+		textSize(19);
+		text("Introduction:", 695, 28);
+		text("Name:"+ch1.getName(), 695, 48); 
+		text("Score:"+ch1.getNowScore(), 695, 70); 
+		text("XP:"+ch1.getXP(), 695, 95); 
+		//chat
+		textSize(19);
+		fill(155,220,0);
+		rect(690, 105, 400, 30);
+		noStroke();
+		fill(0);
+		text("Let's chat~", 695, 125);
+		cp5.get(Textarea.class, "txt").setFont(createFont("Arial",20,true)).show();
+		cp5.get(Textfield.class, "space").setFont(createFont("Arial",20,true)).show();
+
+		
+	}
 	
 	public void keyPressed(KeyEvent e){
 		int key1 = e.getKeyCode();

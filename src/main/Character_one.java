@@ -1,22 +1,10 @@
 package main;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.image.*;
-import java.io.IOException;
-import javax.imageio.*;
-import java.io.File;
-import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 import processing.core.PImage;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class Character_one extends AbstractCharacter{
+	private static final long serialVersionUID = 1L;
 	public PImage image = null;
 	private String s;
 	public Direction d;

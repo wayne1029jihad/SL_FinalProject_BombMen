@@ -1,6 +1,5 @@
 package main;
 
-import java.awt.image.BufferedImage;
 
 import java.util.TimerTask;
 public class Bomb extends TimerTask{
