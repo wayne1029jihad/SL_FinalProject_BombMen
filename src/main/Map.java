@@ -13,7 +13,7 @@ public class Map implements Map_interface{//
 	private int boxheight = 40;
 	private int weight, height;
 	private int []map;
-	PImage background,obstacle,obstacle_break,wall,floor,bomb,fire;
+	PImage background,obstacle,obstacle_break,wall,floor,bomb;
 	
 	static BufferedReader br = null;//read bit map 	
 	
@@ -29,23 +29,12 @@ public class Map implements Map_interface{//
 	public void loadmap()
 	{
 		floor = gs.loadImage("floor.png");
-		fire = gs.loadImage("fire.png");
 		obstacle = gs.loadImage("obstacle.png");//this png not in source
 		obstacle_break = gs.loadImage("obstacle_break.png");
 		wall = gs.loadImage("wall.png");
 		//gs.println(gs.dataPath(""));
 		bomb = gs.loadImage("bump_red.png");
 		readerfile("src/data/grass.txt",weight);
-	}
-	public void setBomb(Bombtype type)
-	{
-		if(type == Bombtype.bump_red)
-			bomb = gs.loadImage("bump_red.png");
-		else if(type == Bombtype.bump_s)
-			bomb = gs.loadImage("bump_s.png");
-		else
-			bomb = gs.loadImage("bump.png");
-		display();		
 	}
 	public void display()
 	{
@@ -59,12 +48,6 @@ public class Map implements Map_interface{//
 					break;
 				case 2:
 					gs.image(obstacle, (i%weight)*boxweight, (i/weight)*boxheight,boxweight,boxheight);
-					break;
-				case 3:
-					gs.image(bomb, (i%weight)*boxweight, (i/weight)*boxheight,boxweight,boxheight);
-					break;
-				case 5:
-					gs.image(fire, (i%weight)*boxweight, (i/weight)*boxheight,boxweight,boxheight);
 					break;
 				case 8:
 					gs.image(wall, (i%weight)*boxweight, (i/weight)*boxheight,boxweight,boxheight);

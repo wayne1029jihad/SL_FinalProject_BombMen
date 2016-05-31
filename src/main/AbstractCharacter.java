@@ -11,10 +11,25 @@ public abstract class AbstractCharacter extends JPanel{
 	protected GameStage gs;
 	private boolean isActive;
 	abstract public String getName();
-	abstract public void initial(GameStage g,int num);;
+	abstract public void initial();
 	private int NOW_SCORE;
 	private int powertimes;	
-	private int life=1;
+	private int life = 1;
+	protected int bombnumber = 0;
+	public void bombput()
+	{
+		bombnumber = bombnumber - 1;
+	}
+	public void bombrecover()
+	{
+		bombnumber = bombnumber + 1;
+	}
+	public boolean canputbomb(){
+		if (bombnumber == 0)
+			return false;
+		else
+			return true;
+	}
 	public void setXP(int life)
 	{
 		this.life=life;

@@ -26,6 +26,7 @@ public class GameStage extends PApplet implements KeyListener{
 	public Character_one ch1; 
 	private boolean pressed = false;
 	private Timer timer = new Timer();
+	private Bomb bomb;
 	Textarea myTextarea;
 	private enum Gamestate {Init,Menu,GameStart};
 	private Gamestate gstat = Gamestate.Init;
@@ -72,8 +73,9 @@ public class GameStage extends PApplet implements KeyListener{
 		 
 
 		ch1= new Character_one(this,"CH1",45,40,1);
+		bomb = new Bomb(ch1,this,3,45,40);
 		gamemap = new Map(this,15,13);
-		timer.schedule(ch1.bomb, 0, 450);
+		timer.schedule(bomb, 0, 450);
 		
 		//add music
 		minim=new Minim(this);
@@ -107,12 +109,6 @@ public class GameStage extends PApplet implements KeyListener{
 			cp5.get(Button.class, "btn3").hide();
 			gamestart();
 		}
-		if(ch1.bomb.getCount() == 10)
-		{
-			System.out.println("bombreset");
-			//timer.purge();
-			ch1.bomb.resetCount();			
-		}
 		
 	}
 	public void gamestart() {
@@ -138,8 +134,8 @@ public class GameStage extends PApplet implements KeyListener{
 		text("Let's chat~", 695, 125);
 		cp5.get(Textarea.class, "txt").setFont(createFont("Arial",20,true)).show();
 		cp5.get(Textfield.class, "space").setFont(createFont("Arial",20,true)).show();
+		bomb.draw();
 		ch1.draw();
-		
 	}
 	
 	public void keyPressed(KeyEvent e){
@@ -169,9 +165,13 @@ public class GameStage extends PApplet implements KeyListener{
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_SPACE)
 			{
-				gamemap.ChangeByUser(ch1.next_x/45, ch1.next_y/40, 3);
-				ch1.bomb.setBombPosition(ch1.next_x,ch1.next_y);
-				ch1.bomb.startBomb();
+				if (ch1.canputbomb()) {
+					ch1.bombput();
+					bomb.setBombPosition(ch1.next_x, ch1.next_y);
+					bomb.startBomb();
+				} else {
+					System.out.println("can't put a bomb");
+				}
 			}
 			else if(key1== java.awt.event.KeyEvent.VK_ENTER)
 			{

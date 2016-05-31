@@ -2,122 +2,59 @@ package main;
 
 
 import java.util.TimerTask;
+
+import processing.core.PImage;
 public class Bomb extends TimerTask{
 	private int power;
-	private Bombtype type;
 	private int bombX,bombY;
 	protected GameStage gs;
+	private int blocksizeX,blocksizeY;
+	private PImage image;
+	private PImage redbomb,blackbomb,smallbomb,fire;
+	private AbstractCharacter ch;
+	private boolean isexplode = false;
 	private int count = 0;
 	private boolean start = false;
 
-	public Bomb(int num,int power,GameStage gs) {
+	public Bomb(AbstractCharacter ch,GameStage gs,int power,int bsizeX,int bsizeY) {
 		
 		setPower(power);
 		this.gs = gs;
+		this.ch = ch;
+		loadimage();
+		image = blackbomb;
+		blocksizeX = bsizeX;
+		blocksizeY = bsizeY;
 	}
 
 	public void run() {
 		if(start)
 		{
+			gs.gamemap.ChangeByUser(bombX/blocksizeX, bombY/blocksizeY, 3);
 			if(count > 7)
 			{
-				for(int i = 0; i < 15*13; i++)
-				{
-					if((int) gs.gamemap.getoneboxmap(i%13, i/13) == 5)
-					{
-						gs.gamemap.ChangeByUser(i%13, i/13, 0);
-					}
-				}
-				count = 10;
+				gs.gamemap.ChangeByUser(bombX/blocksizeX, bombY/blocksizeY, 0);
+				count = 0;
 				start = false;
+				isexplode = false;
+				ch.bombrecover();
 			}
 			else if(count > 6)
 			{
-				explore();			
+				isexplode = true;
 			}
 			else if(count > 4)
-				type = Bombtype.bump_red;
+				image = redbomb;
 			else
 			{
 				if(count % 2 ==0)
-					type = Bombtype.bump_b;
+					image = blackbomb;
 				else
-					type = Bombtype.bump_s;
+					image = smallbomb;
 			}
-			gs.gamemap.setBomb(type);
 			count++;
 		}
 	}
-	
-	public void explore()
-	{
-		gs.gamemap.ChangeByUser(bombX, bombY, 5);
-		for(int i = 1; i < power; i++)
-		{
-			if(gs.gamemap.NoObstacle(bombX+i, bombY) || gs.gamemap.getoneboxmap(bombX+i, bombY) == 1)
-			{
-				if(gs.gamemap.getoneboxmap(bombX+i, bombY) == 1)
-				{
-					gs.gamemap.ChangeByUser(bombX+i, bombY, 5);
-					if(gs.gamemap.getoneboxmap(bombX+i+1, bombY) == 1)
-						break;
-				}
-				else
-					gs.gamemap.ChangeByUser(bombX+i, bombY, 5);					
-			}
-			else
-				break;
-		}
-		for(int i = 1; i < power; i++)
-		{			
-			if(gs.gamemap.NoObstacle(bombX, bombY+i) || gs.gamemap.getoneboxmap(bombX, bombY+i) == 1)
-			{
-				if(gs.gamemap.getoneboxmap(bombX, bombY+i) == 1)
-				{
-					gs.gamemap.ChangeByUser(bombX, bombY+i, 5);
-					if(gs.gamemap.getoneboxmap(bombX, bombY+i+1) == 1)
-						break;
-				}
-				else
-					gs.gamemap.ChangeByUser(bombX, bombY+i, 5);					
-			}
-			else
-				break;
-		}
-		for(int i = 1; i < power; i++)
-		{
-			if(gs.gamemap.NoObstacle(bombX-i, bombY) || gs.gamemap.getoneboxmap(bombX-i, bombY) == 1)
-			{
-				if(gs.gamemap.getoneboxmap(bombX-i, bombY) == 1)
-				{
-					gs.gamemap.ChangeByUser(bombX-i, bombY, 5);
-					if(gs.gamemap.getoneboxmap(bombX-i-1, bombY) == 1)
-						break;
-				}
-				else
-					gs.gamemap.ChangeByUser(bombX-i, bombY, 5);					
-			}
-			else
-				break;
-		}
-		for(int i = 1; i < power; i++)
-		{
-			if(gs.gamemap.NoObstacle(bombX, bombY-i) || gs.gamemap.getoneboxmap(bombX, bombY-i) == 1)
-			{
-				if(gs.gamemap.getoneboxmap(bombX, bombY-i) == 1)
-				{
-					gs.gamemap.ChangeByUser(bombX, bombY-i, 5);
-					if(gs.gamemap.getoneboxmap(bombX, bombY-i-1) == 1)
-						break;
-				}
-				else
-					gs.gamemap.ChangeByUser(bombX, bombY-i, 5);	
-			}
-			else
-				break;
-		}
-	}
-	
 	public void setPower(int p){
 		power = p;
 	}
@@ -137,23 +74,44 @@ public class Bomb extends TimerTask{
 	{
 		return bombY;
 	}
-	public void setType(Bombtype t){
-		type = t;
-	}
-	public Bombtype getType(){
-		return type;
-	}
-	public int getCount()
-	{
-		return count;
-	}
-	public void resetCount()
-	{
-		count = 0;
-	}
 	public void startBomb()
 	{
 		start = true;
+	}
+	private void loadimage()
+	{
+		redbomb = gs.loadImage("bump_red.png");
+		blackbomb = gs.loadImage("bump.png");
+		smallbomb = gs.loadImage("bump_s.png");
+		fire = gs.loadImage("fire.png");
+	}
+	private void paintline(int shiftX,int shiftY)
+	{
+		int i;
+		int X = bombX + shiftX,Y = bombY + shiftY;
+		for (i = 1;i < power;i++) {
+			if (gs.gamemap.getoneboxmap(X/blocksizeX, Y/blocksizeY) == 2
+				|| gs.gamemap.getoneboxmap(X/blocksizeX, Y/blocksizeY) == 8)
+				break;
+			gs.image(fire, X, Y,blocksizeX,blocksizeY);
+			gs.gamemap.ChangeByUser(X/blocksizeX, Y/blocksizeY, 0);
+			X += shiftX;
+			Y += shiftY;
+		}
+	}
+	public void draw()
+	{
+		if (start) {
+			if (isexplode){
+				gs.image(fire, bombX , bombY,blocksizeX,blocksizeY);
+				paintline(blocksizeX,0);
+				paintline(-blocksizeX,0);
+				paintline(0,blocksizeY);
+				paintline(0,-blocksizeY);
+			} else {
+				gs.image(image,bombX,bombY,blocksizeX,blocksizeY);
+			}
+		}
 	}
 		
 }
