@@ -9,7 +9,6 @@ import controlP5.*;
 import controlP5.Button;
 import controlP5.ControlP5;
 
-import java.util.Timer;
 import controlP5.Textfield;
 import ddf.minim.*;
 
@@ -25,8 +24,6 @@ public class GameStage extends PApplet implements KeyListener{
 	public Map gamemap;
 	public Character_one ch1; 
 	private boolean pressed = false;
-	private Timer timer = new Timer();
-	private Bomb bomb;
 	Textarea myTextarea;
 	private enum Gamestate {Init,Menu,GameStart};
 	private Gamestate gstat = Gamestate.Init;
@@ -72,10 +69,8 @@ public class GameStage extends PApplet implements KeyListener{
 		                  .showScrollbar().hide();
 		 
 
-		ch1= new Character_one(this,"CH1",45,40,1);
-		bomb = new Bomb(ch1,this,3,45,40);
+		ch1= new Character_one(this,"CH1",45,40,5);
 		gamemap = new Map(this,15,13);
-		timer.schedule(bomb, 0, 450);
 		
 		//add music
 		minim=new Minim(this);
@@ -122,9 +117,9 @@ public class GameStage extends PApplet implements KeyListener{
 		fill(0);
 		textSize(19);
 		text("Introduction:", 695, 28);
-		text("Name:"+ch1.getName(), 695, 48); 
-		text("Score:"+ch1.getNowScore(), 695, 70); 
-		text("XP:"+ch1.getXP(), 695, 95); 
+		text("Name:"+ch1.getName(), 695, 48);
+		text("Score:"+ch1.getNowScore(), 695, 70);
+		text("XP:"+ch1.getXP(), 695, 95);
 		//chat
 		textSize(19);
 		fill(155,220,0);
@@ -134,7 +129,6 @@ public class GameStage extends PApplet implements KeyListener{
 		text("Let's chat~", 695, 125);
 		cp5.get(Textarea.class, "txt").setFont(createFont("Arial",20,true)).show();
 		cp5.get(Textfield.class, "space").setFont(createFont("Arial",20,true)).show();
-		bomb.draw();
 		ch1.draw();
 	}
 	
@@ -173,13 +167,8 @@ public class GameStage extends PApplet implements KeyListener{
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_SPACE)
 			{
-				if (ch1.canputbomb()) {
+				if(gamemap.NoObstacle(ch1.next_x/45, ch1.next_y/40))
 					ch1.bombput();
-					bomb.setBombPosition(ch1.next_x, ch1.next_y);
-					bomb.startBomb();
-				} else {
-					System.out.println("can't put a bomb");
-				}
 			}
 			else if(key1== java.awt.event.KeyEvent.VK_ENTER)
 			{

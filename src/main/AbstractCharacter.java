@@ -1,5 +1,6 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -15,20 +16,25 @@ public abstract class AbstractCharacter extends JPanel{
 	private int NOW_SCORE;
 	private int powertimes;	
 	private int life = 1;
-	protected int bombnumber = 0;
+	protected ArrayList<Bomb> bomb;
+	protected int currentbomb;
+	protected int bombnumber;
+	protected int totalbomb;
+	public int next_x = 0, next_y = 0;
 	public void bombput()
 	{
-		bombnumber = bombnumber - 1;
+		if (bombnumber == 0)
+			System.out.println("can't put a bomb");
+		else {
+			bombnumber = bombnumber - 1;
+			bomb.get(currentbomb).setBombPosition(next_x,next_y);
+			bomb.get(currentbomb).startBomb();
+			currentbomb = (currentbomb+1)%totalbomb;
+		}
 	}
 	public void bombrecover()
 	{
 		bombnumber = bombnumber + 1;
-	}
-	public boolean canputbomb(){
-		if (bombnumber == 0)
-			return false;
-		else
-			return true;
 	}
 	public void setXP(int life)
 	{

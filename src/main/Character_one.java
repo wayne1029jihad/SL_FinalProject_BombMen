@@ -1,5 +1,8 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.Timer;
+
 import processing.core.PImage;
 
 public class Character_one extends AbstractCharacter{
@@ -8,7 +11,6 @@ public class Character_one extends AbstractCharacter{
 	private PImage up,right,right_go,left,left_go,down;
 	private String name;
 	public Direction d;
-	public int next_x = 0, next_y = 0;
 	
 	public Character_one(GameStage g, String name, int initial_X, int initial_Y,int num){
 		initial();
@@ -18,13 +20,18 @@ public class Character_one extends AbstractCharacter{
 		next_y = initial_Y;
 		loadimage();
 		bombnumber = num;
-		//super.setSkill(new Punch());
+		totalbomb = bombnumber;
+		bomb = new ArrayList<Bomb>();
+		for (int i = 0;i < totalbomb;i++) {
+			Bomb b = new Bomb(this,gs,3,45,40);
+			new Timer().schedule(b, 0, 450);
+			bomb.add(b);
+		}
 	}
 	public String getName(){
 		return name;
 	}
 	public void initial(){
-		//getName();//before you use this to get player1 but every one are different name decide by server
 		setActive();
 		setStartScore();
 		setPowerTimes();
@@ -74,6 +81,8 @@ public class Character_one extends AbstractCharacter{
 	}
 	public void draw()
 	{
+		for (Bomb b : bomb)
+			b.draw();
 		gs.image(image, next_x, next_y,45,40);
 	}
 }
