@@ -145,22 +145,30 @@ public class GameStage extends PApplet implements KeyListener{
 			pressed = true;
 			if(key1 == java.awt.event.KeyEvent.VK_LEFT){
 				if(gamemap.NoObstacle(ch1.next_x/45-1, ch1.next_y/40)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
-					ch1.move(Direction.LEFT);
-				}			
+					ch1.move(Direction.LEFT,true);
+				} else {
+					ch1.move(Direction.LEFT,false);
+				}
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_DOWN){
 				if(gamemap.NoObstacle(ch1.next_x/45, ch1.next_y/40+1)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
-					ch1.move(Direction.DOWN);
-				}			
+					ch1.move(Direction.DOWN,true);
+				} else {
+					ch1.move(Direction.DOWN,false);
+				}
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_UP){
 				if(gamemap.NoObstacle(ch1.next_x/45, ch1.next_y/40-1)){// at least at 1 block, use matrix to put character
-					ch1.move(Direction.UP);
-				}			
+					ch1.move(Direction.UP,true);
+				} else {
+					ch1.move(Direction.UP,false);
+				}
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_RIGHT){
 				if(gamemap.NoObstacle(ch1.next_x/45+1, ch1.next_y/40)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
-					ch1.move(Direction.RIGHT);
+					ch1.move(Direction.RIGHT,true);
+				} else {
+					ch1.move(Direction.RIGHT,false);
 				}
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_SPACE)

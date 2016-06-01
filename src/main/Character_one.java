@@ -29,12 +29,13 @@ public class Character_one extends AbstractCharacter{
 		setStartScore();
 		setPowerTimes();
 	}
-	public void move(Direction t)
+	public void move(Direction t,boolean forward)
 	{
 		if(t == Direction.UP) {
 			image = up;
-			next_y -= 40;
 			d = t;
+			if (forward)
+				next_y -= 40;
 		} else if(t == Direction.RIGHT) {
 			if (d == Direction.RIGHTGO) {
 				image = right;
@@ -43,7 +44,8 @@ public class Character_one extends AbstractCharacter{
 				image = right_go;
 				d = Direction.RIGHTGO;
 			}
-			next_x += 45;
+			if (forward)
+				next_x += 45;
 		} else if(t == Direction.LEFT) {
 			if (d == Direction.LEFTGO) {
 				image = left;
@@ -52,10 +54,12 @@ public class Character_one extends AbstractCharacter{
 				image = left_go;
 				d = Direction.LEFTGO;
 			}
-			next_x -= 45;
+			if (forward)
+				next_x -= 45;
 		} else {
 			image = down;
-			next_y += 40;
+			if (forward)
+				next_y += 40;
 		}
 	}
 	private void loadimage()
