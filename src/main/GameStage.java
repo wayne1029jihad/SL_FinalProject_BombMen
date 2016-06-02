@@ -2,6 +2,7 @@ package main;
 
 import processing.core.PApplet;
 import processing.event.KeyEvent;
+import processing.core.PImage;
 
 import java.awt.event.KeyListener;
 import controlP5.*;
@@ -21,6 +22,7 @@ public class GameStage extends PApplet implements KeyListener{
 	private final static int width = 1200, height = 650;
 	private int boxweight = 45;
 	private int boxheight = 40;
+	private PImage background;
 	private ControlP5 cp5;
 	private LoginPanel login = new LoginPanel();
 	public Map gamemap;
@@ -39,14 +41,15 @@ public class GameStage extends PApplet implements KeyListener{
 	public void setup() {
 		size(width, height);
 		smooth();
-
+		println(dataPath(""));
+		background = loadImage("begin.jpg");
 		cp5 = new ControlP5(this);
 		cp5.addButton("btn1")
-		.setLabel("Login").setPosition(500, 100).setSize(200, 50);
+		.setLabel("Login").setPosition(500, 300).setSize(200, 50);
 		cp5.get(Button.class, "btn1").getCaptionLabel().setFont(createFont("Arial",20,true));
 
 		cp5.addButton("btn2")
-		.setLabel("Exit").setPosition(500, 300).setSize(200, 50);
+		.setLabel("Exit").setPosition(500, 500).setSize(200, 50);
 		cp5.get(Button.class, "btn2").getCaptionLabel().setFont(createFont("Arial",20,true));
 
 		cp5.addButton("btn3")
@@ -97,8 +100,13 @@ public class GameStage extends PApplet implements KeyListener{
 		if (gstat == Gamestate.Menu)
 			gstat = Gamestate.WatingConn;
 	}
+	
+	
+	
 	public void draw() {
 		background(boxheight,160,110);
+		image(background,0,0,1200,680);
+		
 		if(login.loginpass){
 			gstat = Gamestate.Menu;
 			login.loginpass = false;
@@ -117,7 +125,7 @@ public class GameStage extends PApplet implements KeyListener{
 			if(!ready)
 			{
 				client.sendMessage("READY");
-				self.setNumber(client.getNumber());
+				self.setid(client.getNumber());
 				ready = true;
 			}
 							
@@ -129,14 +137,14 @@ public class GameStage extends PApplet implements KeyListener{
 			{
 				System.out.println("send");
 				delay(500);
-				client.sendMessage(self.getNumber()+"@"+self.getName()+"@"+self.getX()+"@"+self.getY());
+				client.sendMessage(self.getid()+"@"+self.getName()+"@"+self.getX()+"@"+self.getY());
 				while(!client.getchange()){};					
 					token = client.getdata();
 					client.setchange(false);
 						
 		
 				trans = token.split("@",4);
-				number = Integer.toString(self.getNumber());
+				number = Integer.toString(self.getid());
 				if(trans[0].equals(number))
 				{
 					delay(100);
@@ -151,10 +159,9 @@ public class GameStage extends PApplet implements KeyListener{
 				{
 					System.out.println(trans[0]+" "+trans[1]+" "+trans[2]+" ");
 					opponent = new Character_one(this, trans[1],Integer.valueOf(trans[2]),Integer.valueOf(trans[3]), 5,Integer.valueOf(trans[0]));
-					System.out.println(opponent.getNumber());
+					System.out.println(opponent.getid());
 					gstat =  Gamestate.GameStart;
-					client.setchange(false);
-					
+					client.setchange(false);					
 				}
 			}
 		}
@@ -203,44 +210,44 @@ public class GameStage extends PApplet implements KeyListener{
 			if(key1 == java.awt.event.KeyEvent.VK_LEFT){
 				if(gamemap.NoObstacle(self.next_x/boxweight-1, self.next_y/boxheight)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(self.next_x, self.next_y) == 4)
 					//self.move(Direction.LEFT,true);
-					client.sendMessage("OP"+"@"+self.getNumber()+"@L@T");
+					client.sendMessage("OP"+"@"+self.getid()+"@L@T");
 				} else {
 					//self.move(Direction.LEFT,false);
-					client.sendMessage("OP"+"@"+self.getNumber()+"@L@F");
+					client.sendMessage("OP"+"@"+self.getid()+"@L@F");
 				}
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_DOWN){
 				if(gamemap.NoObstacle(self.next_x/boxweight, self.next_y/boxheight+1)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(self.next_x, self.next_y) == 4)
 					//self.move(Direction.DOWN,true);
-					client.sendMessage("OP"+"@"+self.getNumber()+"@D@T");
+					client.sendMessage("OP"+"@"+self.getid()+"@D@T");
 				} else {
 					//self.move(Direction.DOWN,false);
-					client.sendMessage("OP"+"@"+self.getNumber()+"@D@F");
+					client.sendMessage("OP"+"@"+self.getid()+"@D@F");
 				}
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_UP){
 				if(gamemap.NoObstacle(self.next_x/boxweight, self.next_y/boxheight-1)){// at least at 1 block, use matrix to put character
 					//self.move(Direction.UP,true);
-					client.sendMessage("OP"+"@"+self.getNumber()+"@U@T");
+					client.sendMessage("OP"+"@"+self.getid()+"@U@T");
 				} else {
 					//self.move(Direction.UP,false);
-					client.sendMessage("OP"+"@"+self.getNumber()+"@U@F");
+					client.sendMessage("OP"+"@"+self.getid()+"@U@F");
 				}
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_RIGHT){
 				if(gamemap.NoObstacle(self.next_x/boxweight+1, self.next_y/boxheight)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(self.next_x, self.next_y) == 4)
 					//self.move(Direction.RIGHT,true);
-					client.sendMessage("OP"+"@"+self.getNumber()+"@R@T");
+					client.sendMessage("OP"+"@"+self.getid()+"@R@T");
 				} else {
 					//self.move(Direction.RIGHT,false);
-					client.sendMessage("OP"+"@"+self.getNumber()+"@R@F");
+					client.sendMessage("OP"+"@"+self.getid()+"@R@F");
 				}
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_SPACE)
 			{
 				if(gamemap.NoObstacle(self.next_x/boxweight, self.next_y/boxheight))
 					//self.bombput();
-					client.sendMessage("OP"+"@"+self.getNumber()+"@S");
+					client.sendMessage("OP"+"@"+self.getid()+"@S");
 			}
 			else if(key1== java.awt.event.KeyEvent.VK_ENTER)
 			{
@@ -271,7 +278,7 @@ public class GameStage extends PApplet implements KeyListener{
 			 String []trans = token.split("@");
 			 if(trans[0].equals("OP"))
 			 {
-				 if(Integer.valueOf(trans[1])== self.getNumber())
+				 if(Integer.valueOf(trans[1])== self.getid())
 				 {
 					 if(trans[2].equals("S"))
 						{
@@ -304,7 +311,7 @@ public class GameStage extends PApplet implements KeyListener{
 					 }
 							
 				 }
-				 else if(Integer.valueOf(trans[1])== opponent.getNumber())
+				 else if(Integer.valueOf(trans[1])== opponent.getid())
 				 {
 					System.out.println("opponent: X = "+opponent.getX());
 					System.out.println(trans[2]);

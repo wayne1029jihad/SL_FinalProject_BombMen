@@ -13,9 +13,9 @@ public class Character_one extends AbstractCharacter{
 	public Direction d;
 	private int boxweight = 45;
 	private int boxheight = 40;
-	private int number;//the number of player
+	private int id;//the number of player
 	
-	public Character_one(GameStage g, String name, int initial_X, int initial_Y,int num,int number){
+	public Character_one(GameStage g, String name, int initial_X, int initial_Y,int num,int id){
 		initial();
 		this.gs = g;
 		this.name = name;
@@ -23,7 +23,7 @@ public class Character_one extends AbstractCharacter{
 		next_y = initial_Y;
 		loadimage();
 		bombnumber = num;
-		this.number = number;
+		this.id = id;
 		totalbomb = bombnumber;
 		bomb = new ArrayList<Bomb>();
 		for (int i = 0;i < totalbomb;i++) {
@@ -89,18 +89,18 @@ public class Character_one extends AbstractCharacter{
 			b.draw();
 		gs.image(image, next_x, next_y,boxweight,boxheight);
 	}
-	public void setNumber(int num)
+	public void setid(int num)
 	{
-		this.number=num;
+		this.id=num;
 		if(num == 1)
 		{
 			next_x = next_x *13;
-			next_y = next_y *11;		
+			next_y = next_y *11;
 		}
 	}
-	public int getNumber()
+	public int getid()
 	{
-		return number;
+		return id;
 	}
 	public int getX()
 	{
