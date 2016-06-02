@@ -19,18 +19,23 @@ import ddf.minim.*;
 public class GameStage extends PApplet implements KeyListener{
 	private static final long serialVersionUID = 1L;
 	private final static int width = 1200, height = 650;
+	private int boxweight = 45;
+	private int boxheight = 40;
 	private ControlP5 cp5;
 	private LoginPanel login = new LoginPanel();
 	public Map gamemap;
-	public Character_one ch1; 
+	public Character_one self;
+	private Character_one opponent;
 	private boolean pressed = false;
 	Textarea myTextarea;
-	private enum Gamestate {Init,Menu,GameStart};
+	private enum Gamestate {Init,Menu,WatingConn,GameStart};
 	private Gamestate gstat = Gamestate.Init;
 	public String chatword;
 	Minim minim;
 	ddf.minim.AudioPlayer song;
-
+	//Client
+		Client client = new Client("127.0.0.1",8000);
+		private boolean ready = false;
 	public void setup() {
 		size(width, height);
 		smooth();
@@ -69,14 +74,15 @@ public class GameStage extends PApplet implements KeyListener{
 		                  .showScrollbar().hide();
 		 
 
-		ch1= new Character_one(this,"CH1",45,40,5);
+		self= new Character_one(this,"CH1",45,40,5,client.getNumber());		
 		gamemap = new Map(this,15,13);
 		
 		//add music
 		minim=new Minim(this);
 		song=minim.loadFile("song/file.mp3");
-		song.play();
-					
+		//song.play();
+		//Client
+		client.connect();			
 		
 	}
 	
@@ -89,16 +95,72 @@ public class GameStage extends PApplet implements KeyListener{
 	}
 	public void btn3(){
 		if (gstat == Gamestate.Menu)
-			gstat = Gamestate.GameStart;
+			gstat = Gamestate.WatingConn;
 	}
 	public void draw() {
-		background(40,160,110);
+		background(boxheight,160,110);
 		if(login.loginpass){
 			gstat = Gamestate.Menu;
 			login.loginpass = false;
 			cp5.get(Button.class, "btn1").hide();
 			cp5.get(Button.class, "btn2").hide();
 			cp5.get(Button.class, "btn3").show();
+		}
+		if (gstat == Gamestate.WatingConn)
+		{
+			String token = " ";
+			String temp;
+			String[] trans;
+			String number;			
+			textSize(39);
+			text("Waiting For Opponent", 200, 450);
+			if(!ready)
+			{
+				client.sendMessage("READY");
+				self.setNumber(client.getNumber());
+				ready = true;
+			}
+							
+			temp = client.getdata();
+			if(temp != null)
+				 token= temp; 
+			client.setchange(false);			
+			if(token.equals("BEGIN") )
+			{
+				System.out.println("send");
+				delay(500);
+				client.sendMessage(self.getNumber()+"@"+self.getName()+"@"+self.getX()+"@"+self.getY());
+				while(!client.getchange()){};					
+					token = client.getdata();
+					client.setchange(false);
+						
+		
+				trans = token.split("@",4);
+				number = Integer.toString(self.getNumber());
+				if(trans[0].equals(number))
+				{
+					delay(100);
+						token = client.getdata();
+						trans = token.split("@");
+						opponent = new Character_one(this, trans[1],Integer.valueOf(trans[2]),Integer.valueOf(trans[3]), 5,Integer.valueOf(trans[0]));
+						gstat =  Gamestate.GameStart;
+						client.setchange(false);
+						System.out.println("start");
+				}
+				else
+				{
+					System.out.println(trans[0]+" "+trans[1]+" "+trans[2]+" ");
+					opponent = new Character_one(this, trans[1],Integer.valueOf(trans[2]),Integer.valueOf(trans[3]), 5,Integer.valueOf(trans[0]));
+					System.out.println(opponent.getNumber());
+					gstat =  Gamestate.GameStart;
+					client.setchange(false);
+					
+				}
+			}
+		}
+		if(client.getchange())
+		{
+			dataFromServer();			
 		}
 		if (gstat == Gamestate.GameStart){
 			cp5.get(Button.class, "btn3").hide();
@@ -117,9 +179,9 @@ public class GameStage extends PApplet implements KeyListener{
 		fill(0);
 		textSize(19);
 		text("Introduction:", 695, 28);
-		text("Name:"+ch1.getName(), 695, 48);
-		text("Score:"+ch1.getNowScore(), 695, 70);
-		text("XP:"+ch1.getXP(), 695, 95);
+		text("Name:"+self.getName(), 695, 48);
+		text("Score:"+self.getNowScore(), 695, 70);
+		text("XP:"+self.getXP(), 695, 95);
 		//chat
 		textSize(19);
 		fill(155,220,0);
@@ -129,7 +191,8 @@ public class GameStage extends PApplet implements KeyListener{
 		text("Let's chat~", 695, 125);
 		cp5.get(Textarea.class, "txt").setFont(createFont("Arial",20,true)).show();
 		cp5.get(Textfield.class, "space").setFont(createFont("Arial",20,true)).show();
-		ch1.draw();
+		self.draw();
+		opponent.draw();
 	}
 	
 	public void keyPressed(KeyEvent e){
@@ -138,42 +201,52 @@ public class GameStage extends PApplet implements KeyListener{
 		{
 			pressed = true;
 			if(key1 == java.awt.event.KeyEvent.VK_LEFT){
-				if(gamemap.NoObstacle(ch1.next_x/45-1, ch1.next_y/40)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
-					ch1.move(Direction.LEFT,true);
+				if(gamemap.NoObstacle(self.next_x/boxweight-1, self.next_y/boxheight)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(self.next_x, self.next_y) == 4)
+					//self.move(Direction.LEFT,true);
+					client.sendMessage("OP"+"@"+self.getNumber()+"@L@T");
 				} else {
-					ch1.move(Direction.LEFT,false);
+					//self.move(Direction.LEFT,false);
+					client.sendMessage("OP"+"@"+self.getNumber()+"@L@F");
 				}
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_DOWN){
-				if(gamemap.NoObstacle(ch1.next_x/45, ch1.next_y/40+1)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
-					ch1.move(Direction.DOWN,true);
+				if(gamemap.NoObstacle(self.next_x/boxweight, self.next_y/boxheight+1)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(self.next_x, self.next_y) == 4)
+					//self.move(Direction.DOWN,true);
+					client.sendMessage("OP"+"@"+self.getNumber()+"@D@T");
 				} else {
-					ch1.move(Direction.DOWN,false);
+					//self.move(Direction.DOWN,false);
+					client.sendMessage("OP"+"@"+self.getNumber()+"@D@F");
 				}
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_UP){
-				if(gamemap.NoObstacle(ch1.next_x/45, ch1.next_y/40-1)){// at least at 1 block, use matrix to put character
-					ch1.move(Direction.UP,true);
+				if(gamemap.NoObstacle(self.next_x/boxweight, self.next_y/boxheight-1)){// at least at 1 block, use matrix to put character
+					//self.move(Direction.UP,true);
+					client.sendMessage("OP"+"@"+self.getNumber()+"@U@T");
 				} else {
-					ch1.move(Direction.UP,false);
+					//self.move(Direction.UP,false);
+					client.sendMessage("OP"+"@"+self.getNumber()+"@U@F");
 				}
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_RIGHT){
-				if(gamemap.NoObstacle(ch1.next_x/45+1, ch1.next_y/40)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(ch1.next_x, ch1.next_y) == 4)
-					ch1.move(Direction.RIGHT,true);
+				if(gamemap.NoObstacle(self.next_x/boxweight+1, self.next_y/boxheight)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(self.next_x, self.next_y) == 4)
+					//self.move(Direction.RIGHT,true);
+					client.sendMessage("OP"+"@"+self.getNumber()+"@R@T");
 				} else {
-					ch1.move(Direction.RIGHT,false);
+					//self.move(Direction.RIGHT,false);
+					client.sendMessage("OP"+"@"+self.getNumber()+"@R@F");
 				}
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_SPACE)
 			{
-				if(gamemap.NoObstacle(ch1.next_x/45, ch1.next_y/40))
-					ch1.bombput();
+				if(gamemap.NoObstacle(self.next_x/boxweight, self.next_y/boxheight))
+					//self.bombput();
+					client.sendMessage("OP"+"@"+self.getNumber()+"@S");
 			}
 			else if(key1== java.awt.event.KeyEvent.VK_ENTER)
 			{
 				chatword=cp5.get(Textfield.class, "space").getText();
-				myTextarea.append(ch1.getName()+":"+chatword+"\n");
+				//myTextarea.append(self.getName()+":"+chatword+"\n");
+				client.sendMessage("CHAT"+"@"+self.getName()+":"+chatword);
 			}
 			else if(key1==java.awt.event.KeyEvent.VK_PAUSE)
 			{
@@ -190,4 +263,87 @@ public class GameStage extends PApplet implements KeyListener{
 	}
 	
 	public void keyTyped(KeyEvent e){}
+	public void dataFromServer()
+	{
+		 String token;		 
+		 token = client.getdata();
+		 client.setchange(false);
+			 String []trans = token.split("@");
+			 if(trans[0].equals("OP"))
+			 {
+				 if(Integer.valueOf(trans[1])== self.getNumber())
+				 {
+					 if(trans[2].equals("S"))
+						{
+							self.bombput();
+						}
+					 else
+					 {
+						 if(trans[3].equals("T"))
+						 {
+						 	if(trans[2].equals("L"))
+								self.move(Direction.LEFT,true);
+							else if(trans[2].equals("R"))
+								self.move(Direction.RIGHT,true);	
+							else if(trans[2].equals("U"))
+								self.move(Direction.UP,true);
+							else if(trans[2].equals("D"))
+								self.move(Direction.DOWN,true);
+						 }
+						 else if(trans[3].equals("F"))
+						 {
+							 if(trans[2].equals("L"))
+								self.move(Direction.LEFT,false);
+							else if(trans[2].equals("R"))
+								self.move(Direction.RIGHT,false);	
+							else if(trans[2].equals("U"))
+								self.move(Direction.UP,false);
+							else if(trans[2].equals("D"))
+								self.move(Direction.DOWN,false); 
+						 }
+					 }
+							
+				 }
+				 else if(Integer.valueOf(trans[1])== opponent.getNumber())
+				 {
+					System.out.println("opponent: X = "+opponent.getX());
+					System.out.println(trans[2]);
+
+					if(trans[2].equals("S"))
+					{
+						 opponent.bombput();
+					}
+					 else
+					 {
+						 if(trans[3].equals("T"))
+						 {
+						 	if(trans[2].equals("L"))
+						 		opponent.move(Direction.LEFT,true);
+							else if(trans[2].equals("R"))
+								opponent.move(Direction.RIGHT,true);	
+							else if(trans[2].equals("U"))
+								opponent.move(Direction.UP,true);
+							else if(trans[2].equals("D"))
+								opponent.move(Direction.DOWN,true);
+						 }
+						 else if(trans[3].equals("F"))
+						 {
+							 if(trans[2].equals("L"))
+								opponent.move(Direction.LEFT,false);
+							else if(trans[2].equals("R"))
+								opponent.move(Direction.RIGHT,false);	
+							else if(trans[2].equals("U"))
+								opponent.move(Direction.UP,false);
+							else if(trans[2].equals("D"))
+								opponent.move(Direction.DOWN,false); 
+						 }
+					 }
+				 }
+			 }
+			 else if(trans[0].equals("CHAT"))
+			 {
+				myTextarea.append(trans[1]+"\n");			
+			 }	 
+			 //client.setchange(false);
+	}
 }

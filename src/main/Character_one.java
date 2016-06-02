@@ -11,8 +11,11 @@ public class Character_one extends AbstractCharacter{
 	private PImage up,right,right_go,left,left_go,down;
 	private String name;
 	public Direction d;
+	private int boxweight = 45;
+	private int boxheight = 40;
+	private int number;//the number of player
 	
-	public Character_one(GameStage g, String name, int initial_X, int initial_Y,int num){
+	public Character_one(GameStage g, String name, int initial_X, int initial_Y,int num,int number){
 		initial();
 		this.gs = g;
 		this.name = name;
@@ -20,10 +23,11 @@ public class Character_one extends AbstractCharacter{
 		next_y = initial_Y;
 		loadimage();
 		bombnumber = num;
+		this.number = number;
 		totalbomb = bombnumber;
 		bomb = new ArrayList<Bomb>();
 		for (int i = 0;i < totalbomb;i++) {
-			Bomb b = new Bomb(this,gs,3,45,40);
+			Bomb b = new Bomb(this,gs,3,boxweight,boxheight);
 			new Timer().schedule(b, 0, 450);
 			bomb.add(b);
 		}
@@ -42,7 +46,7 @@ public class Character_one extends AbstractCharacter{
 			image = up;
 			d = t;
 			if (forward)
-				next_y -= 40;
+				next_y -= boxheight;
 		} else if(t == Direction.RIGHT) {
 			if (d == Direction.RIGHTGO) {
 				image = right;
@@ -52,7 +56,7 @@ public class Character_one extends AbstractCharacter{
 				d = Direction.RIGHTGO;
 			}
 			if (forward)
-				next_x += 45;
+				next_x += boxweight;
 		} else if(t == Direction.LEFT) {
 			if (d == Direction.LEFTGO) {
 				image = left;
@@ -62,11 +66,11 @@ public class Character_one extends AbstractCharacter{
 				d = Direction.LEFTGO;
 			}
 			if (forward)
-				next_x -= 45;
+				next_x -= boxweight;
 		} else {
 			image = down;
 			if (forward)
-				next_y += 40;
+				next_y += boxheight;
 		}
 	}
 	private void loadimage()
@@ -83,6 +87,27 @@ public class Character_one extends AbstractCharacter{
 	{
 		for (Bomb b : bomb)
 			b.draw();
-		gs.image(image, next_x, next_y,45,40);
+		gs.image(image, next_x, next_y,boxweight,boxheight);
+	}
+	public void setNumber(int num)
+	{
+		this.number=num;
+		if(num == 1)
+		{
+			next_x = next_x *13;
+			next_y = next_y *11;		
+		}
+	}
+	public int getNumber()
+	{
+		return number;
+	}
+	public int getX()
+	{
+		return next_x;
+	}
+	public int getY()
+	{
+		return next_y;
 	}
 }
