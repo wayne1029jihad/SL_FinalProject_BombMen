@@ -4,7 +4,6 @@ import processing.core.PApplet;
 import processing.event.KeyEvent;
 import processing.core.PImage;
 
-import java.awt.event.KeyListener;
 import controlP5.*;
 
 import controlP5.Button;
@@ -17,7 +16,7 @@ import ddf.minim.*;
 * This class is for sketching outcome using Processing
 * You can do major UI control and some visualization in this class.
 */
-public class GameStage extends PApplet implements KeyListener{
+public class GameStage extends PApplet{
 	private static final long serialVersionUID = 1L;
 	private final static int width = 1200, height = 650;
 	private int boxweight = 45;
@@ -103,7 +102,6 @@ public class GameStage extends PApplet implements KeyListener{
 	}
 	
 	
-	
 	public void draw() {
 		background(boxheight,160,110);
 		image(background,0,0,1200,680);
@@ -115,13 +113,11 @@ public class GameStage extends PApplet implements KeyListener{
 			cp5.get(Button.class, "btn2").hide();
 			cp5.get(Button.class, "btn3").show();
 		}
-		if (gstat == Gamestate.WatingConn)
-		{
+		if (gstat == Gamestate.WatingConn) {
 			gamewait();
 			if(client.getchange())
 				dataFromServer();
-		}
-		if (gstat == Gamestate.GameStart){
+		} else if (gstat == Gamestate.GameStart) {
 			cp5.get(Button.class, "btn3").hide();
 			gamestart();
 			if(client.getchange())
@@ -187,21 +183,12 @@ public class GameStage extends PApplet implements KeyListener{
 			if(trans[0].equals(number))
 			{
 				delay(100);
-					token = client.getdata();
-					trans = token.split("@");
-					opponent = new Character_one(this, trans[1],Integer.valueOf(trans[2]),Integer.valueOf(trans[3]), 5,Integer.valueOf(trans[0]));
-					gstat =  Gamestate.GameStart;
-					client.setchange(false);
-					System.out.println("start");
+				token = client.getdata();
+				trans = token.split("@");
 			}
-			else
-			{
-				System.out.println(trans[0]+" "+trans[1]+" "+trans[2]+" ");
-				opponent = new Character_one(this, trans[1],Integer.valueOf(trans[2]),Integer.valueOf(trans[3]), 5,Integer.valueOf(trans[0]));
-				System.out.println(opponent.getid());
-				gstat =  Gamestate.GameStart;
-				client.setchange(false);
-			}
+			opponent = new Character_one(this, "CH2",Integer.valueOf(trans[2]),Integer.valueOf(trans[3]), 5,Integer.valueOf(trans[0]));
+			gstat =  Gamestate.GameStart;
+			client.setchange(false);
 		}
 	}
 	public void keyPressed(KeyEvent e){

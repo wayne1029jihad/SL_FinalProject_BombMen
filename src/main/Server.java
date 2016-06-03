@@ -24,11 +24,9 @@ public class Server extends JFrame {
 	private ServerSocket serverSocket;
 	private List<ConnectionThread> connections = new ArrayList<ConnectionThread>();
 	private JTextArea textArea;
+	private String loginpasswd = "", loginaccount = "";
 	BufferedReader br = null;
 	BufferedWriter wr = null;
-	HashMap mapunknow = new HashMap();//png's name form unknown file
-	HashMap mapknowpng = new HashMap();//png's name form know file
-	HashMap mapknowdata = new HashMap();//word form know file
 
 	public Server(int portNum) {				
 		setSize(300, 250);// set window size
@@ -176,6 +174,13 @@ public class Server extends JFrame {
 			} else {
 				if (obj.getString("password").equals(arr[1])) {
 					message = "true";
+					//String compasswd = "", comacct = "";
+					if (loginaccount.equals("")) {
+						loginaccount = arr[0];
+						loginpasswd = arr[1];
+					} else if (loginaccount.equals(arr[0])){
+						message = "islogin";
+					}
 				} else {
 					message = "wrongpwd";
 				}
