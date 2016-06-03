@@ -15,7 +15,12 @@ public class LoginPanel extends PApplet{
 	private static final long serialVersionUID = 1L;
 	private ControlP5 cp5;
 	private int message = 0;
+	private Client client;
 	public boolean loginpass;
+	public LoginPanel(Client c) {
+		client = c;
+		loginpass = false;
+	}
 	public void setup() {
 		size(500, 500);
 		smooth();
@@ -63,38 +68,26 @@ public class LoginPanel extends PApplet{
 		cp5.getController("Cancel").getCaptionLabel().setFont((createFont("Arial",20,true)));
 	}
 	public void Submit(){
-		int i;
-		loginpass = false;
-		JSONArray arr = loadJSONArray("account.json");
-		JSONObject obj = null;
 		String account = cp5.get(Textfield.class, "Account").getText();
 		String password = cp5.get(Textfield.class, "Password").getText();
+		client.sendMessage(account + "@" + password);
 
-		for (i = 0;i< arr.size();i++){
-			obj = arr.getJSONObject(i);
-			if (obj.getString("account").equals(account))
-				break;
-		}
+		delay(100);
+		String temp = client.getdata();
 
-		if(arr.size() == 0 ){
-			System.out.println("account list is empty");
-		} else if (arr.size() == i){
-			message = 1;
-		} else {
-			if (obj.getString("password").equals(password)) {
-				System.out.println("password correct");
-				loginpass = true;
-			} else {
-				message = 2;
-			}
-		}
-
-		System.out.println(password);
-		System.out.println(account);
-		if(loginpass){
+		if (temp.equals("true")) {
+			loginpass = true;
 			frame.setVisible(false);
 			stop();
+		} else if (temp.equals("noaccount")) {
+			message = 1;
+		} else if (temp.equals("wrongpwd")) {
+			message = 2;
+		} else if (temp.equals("islogin")) {
+			message = 4;
 		}
+
+
 	}
 	public void New(){
 		BufferedWriter output;
@@ -148,6 +141,11 @@ public class LoginPanel extends PApplet{
 				fill(255,0,0);
 				textFont(createFont("Arial",28,true));
 				text("Can't use this account",100,370);
+				break;
+			case 4:
+				fill(255,0,0);
+				textFont(createFont("Arial",28,true));
+				text("already login",100,370);
 				break;
 		}
 

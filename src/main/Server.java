@@ -6,25 +6,21 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.HashMap;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+
+import processing.core.PApplet;
+import processing.data.JSONArray;
+import processing.data.JSONObject;
 
 public class Server extends JFrame {
+	private static final long serialVersionUID = 1L;
 	private ServerSocket serverSocket;
 	private List<ConnectionThread> connections = new ArrayList<ConnectionThread>();
 	private JTextArea textArea;
@@ -161,8 +157,45 @@ public class Server extends JFrame {
 				//e.printStackTrace();
 			}
 		}
-
+		private String loginjudge(String line){
+			int i;
+			PApplet s = new PApplet();
+			JSONArray data = s.loadJSONArray("account.json");
+			JSONObject obj = null;
+			String []arr = line.split("@",2);
+			String message = "";
+			for (i = 0;i< data.size();i++){
+				obj = data.getJSONObject(i);
+				if (obj.getString("account").equals(arr[0]))
+					break;
+			}
+			if(data.size() == 0 ){
+				addLine("account list is empty");
+			} else if (data.size() == i){
+				message = "noaccount";
+			} else {
+				if (obj.getString("password").equals(arr[1])) {
+					message = "true";
+				} else {
+					message = "wrongpwd";
+				}
+			}
+			addLine(message);
+			addLine(arr[0] + " and " + arr[1]);
+			return message;
+		}
 		public void run() {				
+			String msg = "";
+			do {
+				try {
+					line = this.reader.readLine();
+					addLine("receive: " + line);
+					msg = loginjudge(line);
+					sendMessage(msg);
+				} catch (IOException e) {
+					//e.printStackTrace();
+				}
+			} while(!msg.equals("true"));
 			while (true) {				
 				try {
 					line = this.reader.readLine();

@@ -1,27 +1,17 @@
 package main;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.net.ConnectException;
-/*
-import javax.swing.BoxLayout;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;*/
-import javax.swing.SwingUtilities;
+
 
 import processing.core.PApplet;
 
 public class Client extends PApplet{
+	private static final long serialVersionUID = 1L;
 	private String destinationIPAddr;
 	private int destinationPortNum;
 	private Socket socket;

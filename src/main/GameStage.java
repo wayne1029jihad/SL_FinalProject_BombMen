@@ -24,7 +24,7 @@ public class GameStage extends PApplet implements KeyListener{
 	private int boxheight = 40;
 	private PImage background;
 	private ControlP5 cp5;
-	private LoginPanel login = new LoginPanel();
+	private LoginPanel login;
 	public Map gamemap;
 	public Character_one self;
 	private Character_one opponent;
@@ -36,8 +36,9 @@ public class GameStage extends PApplet implements KeyListener{
 	Minim minim;
 	ddf.minim.AudioPlayer song;
 	//Client
-		Client client = new Client("127.0.0.1",8000);
-		private boolean ready = false;
+	Client client = new Client("127.0.0.1",8000);
+	private boolean ready = false;
+
 	public void setup() {
 		size(width, height);
 		smooth();
@@ -85,8 +86,8 @@ public class GameStage extends PApplet implements KeyListener{
 		song=minim.loadFile("song/file.mp3");
 		//song.play();
 		//Client
-		client.connect();			
-		
+		client.connect();
+		login = new LoginPanel(client);
 	}
 	
 	public void btn1(){
@@ -116,66 +117,19 @@ public class GameStage extends PApplet implements KeyListener{
 		}
 		if (gstat == Gamestate.WatingConn)
 		{
-			String token = " ";
-			String temp;
-			String[] trans;
-			String number;			
-			textSize(39);
-			text("Waiting For Opponent", 200, 450);
-			if(!ready)
-			{
-				client.sendMessage("READY");
-				self.setid(client.getNumber());
-				ready = true;
-			}
-							
-			temp = client.getdata();
-			if(temp != null)
-				 token= temp; 
-			client.setchange(false);			
-			if(token.equals("BEGIN") )
-			{
-				System.out.println("send");
-				delay(500);
-				client.sendMessage(self.getid()+"@"+self.getName()+"@"+self.getX()+"@"+self.getY());
-				while(!client.getchange()){};					
-					token = client.getdata();
-					client.setchange(false);
-						
-		
-				trans = token.split("@",4);
-				number = Integer.toString(self.getid());
-				if(trans[0].equals(number))
-				{
-					delay(100);
-						token = client.getdata();
-						trans = token.split("@");
-						opponent = new Character_one(this, trans[1],Integer.valueOf(trans[2]),Integer.valueOf(trans[3]), 5,Integer.valueOf(trans[0]));
-						gstat =  Gamestate.GameStart;
-						client.setchange(false);
-						System.out.println("start");
-				}
-				else
-				{
-					System.out.println(trans[0]+" "+trans[1]+" "+trans[2]+" ");
-					opponent = new Character_one(this, trans[1],Integer.valueOf(trans[2]),Integer.valueOf(trans[3]), 5,Integer.valueOf(trans[0]));
-					System.out.println(opponent.getid());
-					gstat =  Gamestate.GameStart;
-					client.setchange(false);					
-				}
-			}
-		}
-		if(client.getchange())
-		{
-			dataFromServer();			
+			gamewait();
+			if(client.getchange())
+				dataFromServer();
 		}
 		if (gstat == Gamestate.GameStart){
 			cp5.get(Button.class, "btn3").hide();
 			gamestart();
+			if(client.getchange())
+				dataFromServer();
 		}
 		
 	}
-	public void gamestart() {
+	private void gamestart() {
 		gamemap.display();
 
 		//introduction
@@ -201,7 +155,55 @@ public class GameStage extends PApplet implements KeyListener{
 		self.draw();
 		opponent.draw();
 	}
-	
+	private void gamewait() {
+		String token = " ";
+		String temp;
+		String[] trans;
+		String number;
+		textSize(39);
+		text("Waiting For Opponent", 200, 450);
+		if(!ready)
+		{
+			client.sendMessage("READY");
+			self.setid(client.getNumber());
+			ready = true;
+		}
+
+		temp = client.getdata();
+		if(temp != null)
+			 token= temp;
+		client.setchange(false);
+		if(token.equals("BEGIN") )
+		{
+			System.out.println("send");
+			delay(500);
+			client.sendMessage(self.getid()+"@"+self.getName()+"@"+self.getX()+"@"+self.getY());
+			while(!client.getchange());
+			token = client.getdata();
+			client.setchange(false);
+
+			trans = token.split("@",4);
+			number = Integer.toString(self.getid());
+			if(trans[0].equals(number))
+			{
+				delay(100);
+					token = client.getdata();
+					trans = token.split("@");
+					opponent = new Character_one(this, trans[1],Integer.valueOf(trans[2]),Integer.valueOf(trans[3]), 5,Integer.valueOf(trans[0]));
+					gstat =  Gamestate.GameStart;
+					client.setchange(false);
+					System.out.println("start");
+			}
+			else
+			{
+				System.out.println(trans[0]+" "+trans[1]+" "+trans[2]+" ");
+				opponent = new Character_one(this, trans[1],Integer.valueOf(trans[2]),Integer.valueOf(trans[3]), 5,Integer.valueOf(trans[0]));
+				System.out.println(opponent.getid());
+				gstat =  Gamestate.GameStart;
+				client.setchange(false);
+			}
+		}
+	}
 	public void keyPressed(KeyEvent e){
 		int key1 = e.getKeyCode();
 		if(pressed == false)
@@ -209,37 +211,29 @@ public class GameStage extends PApplet implements KeyListener{
 			pressed = true;
 			if(key1 == java.awt.event.KeyEvent.VK_LEFT){
 				if(gamemap.NoObstacle(self.next_x/boxweight-1, self.next_y/boxheight)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(self.next_x, self.next_y) == 4)
-					//self.move(Direction.LEFT,true);
 					client.sendMessage("OP"+"@"+self.getid()+"@L@T");
 				} else {
-					//self.move(Direction.LEFT,false);
 					client.sendMessage("OP"+"@"+self.getid()+"@L@F");
 				}
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_DOWN){
 				if(gamemap.NoObstacle(self.next_x/boxweight, self.next_y/boxheight+1)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(self.next_x, self.next_y) == 4)
-					//self.move(Direction.DOWN,true);
 					client.sendMessage("OP"+"@"+self.getid()+"@D@T");
 				} else {
-					//self.move(Direction.DOWN,false);
 					client.sendMessage("OP"+"@"+self.getid()+"@D@F");
 				}
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_UP){
 				if(gamemap.NoObstacle(self.next_x/boxweight, self.next_y/boxheight-1)){// at least at 1 block, use matrix to put character
-					//self.move(Direction.UP,true);
 					client.sendMessage("OP"+"@"+self.getid()+"@U@T");
 				} else {
-					//self.move(Direction.UP,false);
 					client.sendMessage("OP"+"@"+self.getid()+"@U@F");
 				}
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_RIGHT){
 				if(gamemap.NoObstacle(self.next_x/boxweight+1, self.next_y/boxheight)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(self.next_x, self.next_y) == 4)
-					//self.move(Direction.RIGHT,true);
 					client.sendMessage("OP"+"@"+self.getid()+"@R@T");
 				} else {
-					//self.move(Direction.RIGHT,false);
 					client.sendMessage("OP"+"@"+self.getid()+"@R@F");
 				}
 			}
