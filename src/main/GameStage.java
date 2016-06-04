@@ -26,11 +26,12 @@ public class GameStage extends PApplet{
 	private int boxweight = 45;
 	private int boxheight = 40;
 	private PImage background;
+	private PImage c1, c2, c3, c4;
 	private ControlP5 cp5;
 	private LoginPanel login;
 	public Map gamemap;
 	public Character_one self;
-	private Character_one opponent;
+	public Character_one opponent;
 	private boolean pressed = false;
 	Textarea myTextarea;
 	private enum Gamestate {Init,Menu,ChMenu,WatingConn,GameStart,GameEnd};
@@ -44,17 +45,22 @@ public class GameStage extends PApplet{
 	
 	//timer
 		private int sec = 0;
-		private java.util.Timer timer = new java.util.Timer();
+		private Timer timer = new java.util.Timer();
 		private boolean timestart = false;
 	//prop
 	private int[]prop;
-	
+	//state
+	private PImage win,lose,timeon;
 	
 	public void setup() {
 		size(width, height);
 		smooth();
 		println(dataPath(""));
 		background = loadImage("begin.jpg");
+		c1 = loadImage("CH1_front.png");
+		c2 = loadImage("CH2_front.png");
+		c3 = loadImage("CH3_front.png");
+		c4 = loadImage("CH4_front.png");
 		cp5 = new ControlP5(this);
 		cp5.addButton("btn1")
 		.setLabel("Login").setPosition(500, 300).setSize(200, 50);
@@ -67,6 +73,30 @@ public class GameStage extends PApplet{
 		cp5.addButton("btn3")
 		.setLabel("Startgame").setPosition(500, 200).setSize(200, 50).hide();
 		cp5.get(Button.class, "btn3").getCaptionLabel().setFont(createFont("Arial",20,true));
+		
+		cp5.addButton("btn4")
+		.setLabel("Restart").setPosition(500, 300).setSize(200, 50).hide();
+		cp5.get(Button.class, "btn4").getCaptionLabel().setFont(createFont("Arial",20,true));
+		
+		cp5.addButton("btn5")
+		.setLabel("Menu").setPosition(500, 500).setSize(200, 50).hide();
+		cp5.get(Button.class, "btn5").getCaptionLabel().setFont(createFont("Arial",20,true));
+		
+		cp5.addButton("CH1")
+		.setLabel("CH1").setPosition(100, 100).setSize(100, 50).hide();
+		cp5.get(Button.class, "CH1").getCaptionLabel().setFont(createFont("Arial",20,true));
+		
+		cp5.addButton("CH2")
+		.setLabel("CH2").setPosition(300, 100).setSize(100, 50).hide();
+		cp5.get(Button.class, "CH2").getCaptionLabel().setFont(createFont("Arial",20,true));
+		
+		cp5.addButton("CH3")
+		.setLabel("CH3").setPosition(500, 100).setSize(100, 50).hide();
+		cp5.get(Button.class, "CH3").getCaptionLabel().setFont(createFont("Arial",20,true));
+		
+		cp5.addButton("CH4")
+		.setLabel("CH4").setPosition(700, 100).setSize(100, 50).hide();
+		cp5.get(Button.class, "CH4").getCaptionLabel().setFont(createFont("Arial",20,true));
 
 			cp5.addTextfield("space")
 			.setSize(400, 30)
@@ -114,10 +144,47 @@ public class GameStage extends PApplet{
 	}
 	public void btn3(){
 		if (gstat == Gamestate.Menu)
-			gstat = Gamestate.WatingConn;
+			gstat = Gamestate.ChMenu;
+	}
+	public void btn4(){	//Restart the game
+		self.reset();
+		opponent.reset();
+		self.setActive();
+		opponent.setActive();
+		client.sendMessage("READY");
+		delay(200);
+		getprop();
+		gamemap.PG.setProp(prop);
+		gstat = Gamestate.WatingConn;
+	}
+	public void btn5(){ //Go back to the menu
+		cp5.get(Button.class, "btn4").hide();
+		cp5.get(Button.class, "btn5").hide();
+		cp5.get(Button.class, "btn1").show();
+		cp5.get(Button.class, "btn2").show();
+		gstat = Gamestate.Menu;
 	}
 	
-	
+	public void CH1(){
+		self.setName("CH1");
+		if (gstat == Gamestate.ChMenu)
+			gstat = Gamestate.WatingConn;
+	}
+	public void CH2(){
+		self.setName("CH2");
+		if (gstat == Gamestate.ChMenu)
+			gstat = Gamestate.WatingConn;
+	}
+	public void CH3(){
+		self.setName("CH3");
+		if (gstat == Gamestate.ChMenu)
+			gstat = Gamestate.WatingConn;
+	}
+	public void CH4(){
+		self.setName("CH4");
+		if (gstat == Gamestate.ChMenu)
+			gstat = Gamestate.WatingConn;
+	}
 	public void draw() {
 		background(boxheight,160,110);
 		image(background,0,0,1200,680);
@@ -129,19 +196,42 @@ public class GameStage extends PApplet{
 			cp5.get(Button.class, "btn2").hide();
 			cp5.get(Button.class, "btn3").show();
 		}
-		if (gstat == Gamestate.WatingConn) {
-			gamewait();
+		if(gstat == Gamestate.ChMenu){
+			image(c1, 100, 200, 100, 100);
+			image(c2, 300, 200, 100, 100);
+			image(c3, 500, 200, 100, 100);
+			image(c4, 700, 200, 100, 100);
+			cp5.get(Button.class, "btn3").hide();
+			cp5.get(Button.class, "CH1").show();
+			cp5.get(Button.class, "CH2").show();
+			cp5.get(Button.class, "CH3").show();
+			cp5.get(Button.class, "CH4").show();
+		}
+		else if (gstat == Gamestate.WatingConn) {
+			cp5.get(Button.class, "CH1").hide();//
+			cp5.get(Button.class, "CH2").hide();//
+			cp5.get(Button.class, "CH3").hide();//
+			cp5.get(Button.class, "CH4").hide();//
+			gameWait();
 			if(client.getchange())
 				dataFromServer();
 		} else if (gstat == Gamestate.GameStart) {
-			cp5.get(Button.class, "btn3").hide();
-			gamestart();
+			
+			gameStart();
+			if(client.getchange())
+				dataFromServer();
+		}else if(gstat == Gamestate.GameEnd)
+		{
+			cp5.get(Textarea.class, "txt").setFont(createFont("Arial",20,true)).hide();
+			cp5.get(Textfield.class, "space").setFont(createFont("Arial",20,true)).hide();
+			cp5.get(Button.class, "btn4").show();
+			cp5.get(Button.class, "btn5").show();
 			if(client.getchange())
 				dataFromServer();
 		}
 		
 	}
-	private void gamestart() {
+	private void gameStart() {
 		
 		gamemap.display();
 		gamemap.PG.display();
@@ -157,11 +247,11 @@ public class GameStage extends PApplet{
 			timestart = true;
 			Timer();			
 		}
-		text("Time : "+sec, 695, 28);
+		int time = 150-sec;
+		text("Time : "+time/60+" : "+time%60, 695, 28);
 		
 		text("Introduction:", 695, 48);//28
-		text("Name:"+self.getName(), 695, 70);//48
-		text("Score:"+self.getNowScore(), 695, 125);//70
+		text("Name:"+self.getName(), 695, 72);//48
 		text("XP:"+self.getXP(), 695, 95);//95
 		//chat
 		textSize(19);
@@ -174,8 +264,13 @@ public class GameStage extends PApplet{
 		cp5.get(Textfield.class, "space").setFont(createFont("Arial",20,true)).show();
 		self.draw();
 		opponent.draw();
+		
+		if(time <= 0 || !self.isActive() || !opponent.isActive())
+		{
+			gstat = Gamestate.GameEnd;
+		}
 	}
-	private void gamewait() {
+	private void gameWait() {
 		String token = " ";
 		String temp;
 		String[] trans;
@@ -195,7 +290,6 @@ public class GameStage extends PApplet{
 		client.setchange(false);
 		if(token.equals("BEGIN") )
 		{
-			System.out.println("send");
 			delay(100);
 			client.sendMessage(self.getid()+"@"+self.getName()+"@"+self.getX()+"@"+self.getY());
 			while(!client.getchange());
@@ -210,10 +304,17 @@ public class GameStage extends PApplet{
 				token = client.getdata();
 				trans = token.split("@");
 			}
-			opponent = new Character_one(this, "CH2",Integer.valueOf(trans[2]),Integer.valueOf(trans[3]), 2,Integer.valueOf(trans[0]));
+			opponent = new Character_one(this,trans[1] ,Integer.valueOf(trans[2]),Integer.valueOf(trans[3]), 2,Integer.valueOf(trans[0]));
 			gstat =  Gamestate.GameStart;
 			client.setchange(false);
 		}
+	}
+	public void gameEnd()
+	{
+		sec = 0;
+		cp5.get(Button.class, "btn4").hide();
+		cp5.get(Button.class, "btn5").hide();
+		gamemap.reset();		
 	}
 	private void Timer()
 	{
@@ -291,7 +392,7 @@ public class GameStage extends PApplet{
 		 token = client.getdata();
 		 client.setchange(false);
 			 String []trans = token.split("@");
-			 if(trans[0].equals("OP"))
+			 if(trans[0].equals("OP") && self.isActive() && opponent.isActive())
 			 {
 				 if(Integer.valueOf(trans[1])== self.getid())
 				 {
@@ -391,6 +492,17 @@ public class GameStage extends PApplet{
 						 opponent.bump_NO();
 				 }
 				 gamemap.PG.setProptoZero(Integer.valueOf(trans[3]));
+			 }
+			 else if(trans[0].equals("DEAD"))
+			 {
+				 if(Integer.valueOf(trans[1]) == self.getid())
+				 {
+					 self.disActive();
+				 }
+				 else if(Integer.valueOf(trans[1])== opponent.getid())
+				 {
+					 opponent.disActive();
+				 }
 			 }
 			 //client.setchange(false);
 	}

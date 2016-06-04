@@ -39,24 +39,10 @@ public class PropGenerator {
 		bump_add = gs.loadImage("bump_add.png");
 		bump_NO = gs.loadImage("bump_NO.png");
 	}
-	public void setProp()
+	public void setProp(int [] prop)
 	{
-		int i ,ram;
-		for(i = 0; i < height*weight; i++)
-		{
-			if(propmap[i] == 1)
-			{
-				ram = ran.nextInt(15);
-				if(ram == 0)
-					propmap[i] = 4;
-				if(ram == 1)
-					propmap[i] = 5;
-				if(ram == 2)
-					propmap[i] = 6;
-				if(ram == 3)
-					propmap[i] = 7;
-			}
-		}
+		for(int i = 0; i < height*weight; i++)
+			propmap[i] = prop[i];
 	}
 	public void setProptoZero(int position)
 	{

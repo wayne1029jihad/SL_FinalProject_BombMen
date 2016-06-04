@@ -13,6 +13,7 @@ public class Map implements Map_interface{//
 	private int boxheight = 40;
 	private int weight, height;
 	private int []map;
+	private int []remap;
 	PImage background,obstacle,obstacle_break,wall,floor,bomb;
 	
 	//prop
@@ -26,7 +27,8 @@ public class Map implements Map_interface{//
 		this.weight = weight;
 		this.height = height;
 		this.gs = gs;
-		map = new int[weight*height];		
+		map = new int[weight*height];
+		remap = new int[weight*height];
 		loadmap();
 		PG = new PropGenerator(gs,this,weight,height,map,prop);
 	}
@@ -39,6 +41,8 @@ public class Map implements Map_interface{//
 		//gs.println(gs.dataPath(""));
 		bomb = gs.loadImage("bump_red.png");
 		readerfile("src/data/grass.txt",weight);
+		for(int i = 0; i < weight*height;i++)
+			remap[i] = map[i];
 	}
 	public void display()
 	{
@@ -109,5 +113,10 @@ public class Map implements Map_interface{//
 	public int getoneboxmap(int index)
 	{		
 		return map[index];		
+	}
+	public void reset()
+	{
+		for(int i = 0; i < weight*height;i++)
+			map[i] = remap[i];
 	}
 }

@@ -15,7 +15,7 @@ import javax.swing.JLabel;
 */
 public class Main extends JFrame{
 	private static final long serialVersionUID = 1L;
-	private final static int windowWidth = 1200, windowHeight = 670;
+	private final static int windowWidth = 1100, windowHeight = 670;
 	public static void main(String [] args){
 		
 		GameStage game = new GameStage();

@@ -18,6 +18,9 @@ import processing.core.PApplet;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class Server extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private ServerSocket serverSocket;
@@ -26,7 +29,7 @@ public class Server extends JFrame {
 	private String loginpasswd = "", loginaccount = "";
 	BufferedReader br = null;
 	BufferedWriter wr = null;
-	
+	private Timer timer = new java.util.Timer();
 	//prop
 	private randomGenerator RG = new randomGenerator(15,13);
 	public Server(int portNum) {				
@@ -78,22 +81,37 @@ public class Server extends JFrame {
 				count++;
 			} catch (IOException e) {}
 		}
-		boolean test = true;
+		boolean test = false;
 		while(true)
 		{
+			if(connections.get(0).getReady())
+			{
+				connections.get(0).sendMessage(RG.getPropMap());
+			}
+			if(connections.get(1).getReady())
+			{
+				connections.get(1).sendMessage(RG.getPropMap());
+			}
 			if(connections.get(0).getReady() && connections.get(1).getReady())
 			{
 				addLine("Game Start!");//show on frame			
+				
+				if(test) 
+				{
+					RG.setProp();
+					timer.schedule(new TimerTask() {
+						public void run(){								
+						}
+					}, 200);
+				}				
 				begin(true);
-				break;
+				connections.get(0).ready(false);
+				connections.get(1).ready(false);				
+				test = true;
 			}
 			else
-				System.out.print("");
-				
-			if(test)//some bug, if not add ,check never used   
-			{
-				test = false;				
-			}	
+				System.out.print("");	
+			
 		}
 	}
 	public void setchange(boolean change)
@@ -175,19 +193,21 @@ public class Server extends JFrame {
 				try {
 					line = this.reader.readLine();
 					if(line.equals("READY"))
-						ready();
+						ready(true);
 					else
 						Server.this.broadcast(line);
 					addLine("data:"+line); // line is message from server					
 				} catch (IOException e) {
 					//e.printStackTrace();
-				}			
+				}	
+				
 			}
 		}
-		public void ready()
+		public void ready(boolean re)
 		{
-			ready = true;
+			ready = re;
 		}
+		
 		public String getline()//accept read line from client
 		{
 			return line;

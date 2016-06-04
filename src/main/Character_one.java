@@ -16,20 +16,22 @@ public class Character_one extends AbstractCharacter{
 	private int boxheight = 40;
 	private int id;//the number of player
 	private int bombPower = 3;
+	//for initial
+	private int initial_X, initial_Y,initial_bombnum;
+	private int initial_power = 3;
 	//prop
 	private Timer timer = new Timer();
-	private boolean Nobomb = false;
 	
 	public Character_one(GameStage g, String name, int initial_X, int initial_Y,int num,int id){
 		initial();
 		this.gs = g;
 		this.name = name;
-		next_x = initial_X;
-		next_y = initial_Y;
+		this.initial_X = next_x = initial_X;
+		this.initial_Y = next_y = initial_Y;
 		loadimage();
 		bombnumber = num;
 		this.id = id;
-		totalbomb = bombnumber;
+		initial_bombnum = totalbomb = bombnumber;
 		bomb = new ArrayList<Bomb>();
 		for (int i = 0;i < totalbomb;i++) {
 			Bomb b = new Bomb(this,gs,bombPower,boxweight,boxheight);
@@ -40,10 +42,13 @@ public class Character_one extends AbstractCharacter{
 	public String getName(){
 		return name;
 	}
+	public void setName(String na)
+	{
+		name = na;
+		loadimage();
+	}
 	public void initial(){
 		setActive();
-		setStartScore();
-		setPowerTimes();
 	}
 	public void move(Direction t,boolean forward)
 	{
@@ -99,8 +104,8 @@ public class Character_one extends AbstractCharacter{
 		this.id=num;
 		if(num == 1)
 		{
-			next_x = next_x *13;
-			next_y = next_y *11;
+			initial_X = next_x = next_x *13;
+			initial_Y = next_y = next_y *11;
 		}
 	}
 	public int getid()
@@ -124,7 +129,7 @@ public class Character_one extends AbstractCharacter{
 	}
 	public void DEF()
 	{
-		
+		setXP(getXP()+1);
 	}
 	public void bump_add()
 	{
@@ -136,16 +141,26 @@ public class Character_one extends AbstractCharacter{
 	}
 	public void bump_NO()
 	{
-		setBombrel(true);
+		Nobomb = true;
 		timer.schedule(new TimerTask() {
-			public void run(){
-				setBombrel(false);
+			public void run(){						
+						Nobomb = false;
 				}			
-			
-		}, 0, 10000);
+		}, 10000);
 	}
-	public void setBombrel(boolean state)
+	public void reset()
 	{
-		Nobomb = state;
+		next_x = initial_X;
+		next_y = initial_Y;
+		bombnumber = initial_bombnum;
+		totalbomb = initial_bombnum;
+		bombPower =  initial_power;
+		bomb.clear();
+		bomb = new ArrayList<Bomb>();
+		for (int i = 0;i < totalbomb;i++) {
+			Bomb b = new Bomb(this,gs,bombPower,boxweight,boxheight);
+			timer.schedule(b, 0, 450);
+			bomb.add(b);
+		}
 	}
 }

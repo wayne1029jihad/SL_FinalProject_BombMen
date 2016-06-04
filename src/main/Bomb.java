@@ -15,6 +15,7 @@ public class Bomb extends TimerTask{
 	private boolean isexplode = false;
 	private int count = 0;
 	private boolean start = false;
+	private boolean subXP = true;
 
 	public Bomb(AbstractCharacter ch,GameStage gs,int power,int bsizeX,int bsizeY) {
 		
@@ -37,6 +38,7 @@ public class Bomb extends TimerTask{
 				count = 0;
 				start = false;
 				isexplode = false;
+				subXP = true;
 				ch.bombrecover();
 			}
 			else if(count > 6)
@@ -90,12 +92,41 @@ public class Bomb extends TimerTask{
 	{
 		int i;
 		int X = bombX + shiftX,Y = bombY + shiftY;
+		if(subXP){
+			if(gs.self.getX() == bombX && gs.self.getY() == bombY)
+			{
+				gs.self.setXP(gs.self.getXP()-1);
+				subXP = false;
+				gs.client.sendMessage("DEAD@"+gs.self.getid());
+			}
+			if(gs.opponent.getX() == bombX && gs.opponent.getY() == bombY)
+			{
+				gs.opponent.setXP(gs.opponent.getXP()-1);
+				subXP = false;
+				gs.client.sendMessage("DEAD@"+gs.opponent.getid());
+			}
+			
+		}
 		for (i = 1;i < power;i++) {
 			if (gs.gamemap.getoneboxmap(X, Y) == 2
 				|| gs.gamemap.getoneboxmap(X, Y) == 8)
 				break;
 			gs.image(fire, X*blocksizeX, Y*blocksizeY,blocksizeX,blocksizeY);
 			gs.gamemap.ChangeByUser(X, Y, 0);
+			if(subXP){
+				if(gs.self.getX() == X && gs.self.getY() == Y)
+				{
+					gs.self.setXP(gs.self.getXP()-1);
+					subXP = false;
+					gs.client.sendMessage("DEAD@"+gs.self.getid());
+				}
+				if(gs.opponent.getX() == X && gs.opponent.getY() == Y)
+				{
+					gs.opponent.setXP(gs.opponent.getXP()-1);
+					subXP = false;
+					gs.client.sendMessage("DEAD@"+gs.opponent.getid());
+				}
+			}
 			X += shiftX;
 			Y += shiftY;
 		}

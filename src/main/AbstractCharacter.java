@@ -21,12 +21,13 @@ public abstract class AbstractCharacter extends JPanel{
 	protected int bombnumber;
 	protected int totalbomb;
 	public int next_x = 0, next_y = 0;
-	private boolean Nobomb = false;
+	protected boolean Nobomb = false;
 	
 	public void bombput()
 	{
 		if(Nobomb == false)
 		{
+			System.out.println("get prop:"+Nobomb);
 			if (bombnumber == 0)
 				System.out.println("can't put a bomb");
 			else {
@@ -44,9 +45,8 @@ public abstract class AbstractCharacter extends JPanel{
 	public void setXP(int life)
 	{
 		this.life=life;
-		if(life==0)
-			isActive=false;
-		else isActive=true;
+		if(life == 0)
+			disActive();		
 	}
 	public int getXP()
 	{
@@ -60,34 +60,5 @@ public abstract class AbstractCharacter extends JPanel{
 	}
 	public boolean isActive(){
 		return isActive;
-	}
-	public void setSkill(AbstractSkill s){
-		skills.add(s);
-	}
-	public Vector<AbstractSkill> getSkills(){
-		return skills;
-	}	
-	public void setStartScore(){
-		NOW_SCORE = 0;
-	}
-	public void addScore(){
-		NOW_SCORE += 1;
-	}
-	public int getNowScore(){
-		return NOW_SCORE;
-	}
-	public void setNowScore(int score){
-		NOW_SCORE = score;
-	}
-	
-	public void setPowerTimes(){
-		powertimes = 1;
-	}
-	public void addPowerTimes(){
-		powertimes += 1;
-	}
-	public int getPowerTimes(){
-		return powertimes;
-	}
-	
+	}		
 }
