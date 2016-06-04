@@ -43,11 +43,13 @@ public class GameStage extends PApplet{
 	private boolean ready = false;
 	
 	//timer
-	private int sec = 0;
+		private int sec = 0;
 		private java.util.Timer timer = new java.util.Timer();
 		private boolean timestart = false;
-	//
+	//prop
 	private int[]prop;
+	
+	
 	public void setup() {
 		size(width, height);
 		smooth();
@@ -87,7 +89,7 @@ public class GameStage extends PApplet{
 		                  .showScrollbar().hide();
 		 
 
-		self= new Character_one(this,"CH1",45,40,5,client.getNumber());
+		self= new Character_one(this,"CH1",1,1,2,client.getNumber());
 		
 		
 		//add music
@@ -208,7 +210,7 @@ public class GameStage extends PApplet{
 				token = client.getdata();
 				trans = token.split("@");
 			}
-			opponent = new Character_one(this, "CH2",Integer.valueOf(trans[2]),Integer.valueOf(trans[3]), 5,Integer.valueOf(trans[0]));
+			opponent = new Character_one(this, "CH2",Integer.valueOf(trans[2]),Integer.valueOf(trans[3]), 2,Integer.valueOf(trans[0]));
 			gstat =  Gamestate.GameStart;
 			client.setchange(false);
 		}
@@ -229,28 +231,28 @@ public class GameStage extends PApplet{
 		{
 			pressed = true;
 			if(key1 == java.awt.event.KeyEvent.VK_LEFT){
-				if(gamemap.NoObstacle(self.next_x/boxweight-1, self.next_y/boxheight)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(self.next_x, self.next_y) == 4)
+				if(gamemap.NoObstacle(self.next_x-1, self.next_y)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(self.next_x, self.next_y) == 4)
 					client.sendMessage("OP"+"@"+self.getid()+"@L@T");
 				} else {
 					client.sendMessage("OP"+"@"+self.getid()+"@L@F");
 				}
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_DOWN){
-				if(gamemap.NoObstacle(self.next_x/boxweight, self.next_y/boxheight+1)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(self.next_x, self.next_y) == 4)
+				if(gamemap.NoObstacle(self.next_x, self.next_y+1)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(self.next_x, self.next_y) == 4)
 					client.sendMessage("OP"+"@"+self.getid()+"@D@T");
 				} else {
 					client.sendMessage("OP"+"@"+self.getid()+"@D@F");
 				}
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_UP){
-				if(gamemap.NoObstacle(self.next_x/boxweight, self.next_y/boxheight-1)){// at least at 1 block, use matrix to put character
+				if(gamemap.NoObstacle(self.next_x, self.next_y-1)){// at least at 1 block, use matrix to put character
 					client.sendMessage("OP"+"@"+self.getid()+"@U@T");
 				} else {
 					client.sendMessage("OP"+"@"+self.getid()+"@U@F");
 				}
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_RIGHT){
-				if(gamemap.NoObstacle(self.next_x/boxweight+1, self.next_y/boxheight)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(self.next_x, self.next_y) == 4)
+				if(gamemap.NoObstacle(self.next_x+1, self.next_y)){// at least at 1 block, use matrix to put character					if(gamemap.getoneboxmap(self.next_x, self.next_y) == 4)
 					client.sendMessage("OP"+"@"+self.getid()+"@R@T");
 				} else {
 					client.sendMessage("OP"+"@"+self.getid()+"@R@F");
@@ -258,7 +260,7 @@ public class GameStage extends PApplet{
 			}
 			else if(key1 == java.awt.event.KeyEvent.VK_SPACE)
 			{
-				if(gamemap.NoObstacle(self.next_x/boxweight, self.next_y/boxheight))
+				if(gamemap.NoObstacle(self.next_x, self.next_y))
 					//self.bombput();
 					client.sendMessage("OP"+"@"+self.getid()+"@S");
 			}
@@ -363,7 +365,33 @@ public class GameStage extends PApplet{
 			 else if(trans[0].equals("CHAT"))
 			 {
 				myTextarea.append(trans[1]+"\n");			
-			 }	 
+			 }
+			 else if(trans[0].equals("PROP"))
+			 {
+				 if(Integer.valueOf(trans[1])== self.getid())
+				 {
+					 if(trans[2].equals("U"))
+						 self.fireup();
+					 else if(trans[2].equals("D"))
+						 self.DEF();
+					 else if(trans[2].equals("A"))
+						 self.bump_add();
+					 else if(trans[2].equals("N"))
+						 self.bump_NO();
+				 }
+				 else if(Integer.valueOf(trans[1])== opponent.getid())
+				 {
+					 if(trans[2].equals("U"))
+						 opponent.fireup();
+					 else if(trans[2].equals("D"))
+						 opponent.DEF();
+					 else if(trans[2].equals("A"))
+						 opponent.bump_add();
+					 else if(trans[2].equals("N"))
+						 opponent.bump_NO();
+				 }
+				 gamemap.PG.setProptoZero(Integer.valueOf(trans[3]));
+			 }
 			 //client.setchange(false);
 	}
 	public void getprop()

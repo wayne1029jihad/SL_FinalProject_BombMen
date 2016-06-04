@@ -2,6 +2,7 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Timer;
+import java.util.TimerTask;
 
 import processing.core.PImage;
 
@@ -14,6 +15,10 @@ public class Character_one extends AbstractCharacter{
 	private int boxweight = 45;
 	private int boxheight = 40;
 	private int id;//the number of player
+	private int bombPower = 3;
+	//prop
+	private Timer timer = new Timer();
+	private boolean Nobomb = false;
 	
 	public Character_one(GameStage g, String name, int initial_X, int initial_Y,int num,int id){
 		initial();
@@ -27,8 +32,8 @@ public class Character_one extends AbstractCharacter{
 		totalbomb = bombnumber;
 		bomb = new ArrayList<Bomb>();
 		for (int i = 0;i < totalbomb;i++) {
-			Bomb b = new Bomb(this,gs,3,boxweight,boxheight);
-			new Timer().schedule(b, 0, 450);
+			Bomb b = new Bomb(this,gs,bombPower,boxweight,boxheight);
+			timer.schedule(b, 0, 450);
 			bomb.add(b);
 		}
 	}
@@ -46,7 +51,7 @@ public class Character_one extends AbstractCharacter{
 			image = up;
 			d = t;
 			if (forward)
-				next_y -= boxheight;
+				next_y -= 1;
 		} else if(t == Direction.RIGHT) {
 			if (d == Direction.RIGHTGO) {
 				image = right;
@@ -56,7 +61,7 @@ public class Character_one extends AbstractCharacter{
 				d = Direction.RIGHTGO;
 			}
 			if (forward)
-				next_x += boxweight;
+				next_x += 1;
 		} else if(t == Direction.LEFT) {
 			if (d == Direction.LEFTGO) {
 				image = left;
@@ -66,11 +71,11 @@ public class Character_one extends AbstractCharacter{
 				d = Direction.LEFTGO;
 			}
 			if (forward)
-				next_x -= boxweight;
+				next_x -= 1;
 		} else {
 			image = down;
 			if (forward)
-				next_y += boxheight;
+				next_y += 1;
 		}
 	}
 	private void loadimage()
@@ -87,7 +92,7 @@ public class Character_one extends AbstractCharacter{
 	{
 		for (Bomb b : bomb)
 			b.draw();
-		gs.image(image, next_x, next_y,boxweight,boxheight);
+		gs.image(image, next_x*boxweight, next_y*boxheight,boxweight,boxheight);
 	}
 	public void setid(int num)
 	{
@@ -109,5 +114,38 @@ public class Character_one extends AbstractCharacter{
 	public int getY()
 	{
 		return next_y;
+	}
+	//fireup
+	public void fireup()
+	{
+		bombPower++;
+		for (Bomb b : bomb)
+			b.setPower(bombPower);
+	}
+	public void DEF()
+	{
+		
+	}
+	public void bump_add()
+	{
+		totalbomb++;
+		bombnumber++;
+		Bomb b = new Bomb(this,gs,bombPower,boxweight,boxheight);
+		timer.schedule(b, 0, 450);
+		bomb.add(b);
+	}
+	public void bump_NO()
+	{
+		setBombrel(true);
+		timer.schedule(new TimerTask() {
+			public void run(){
+				setBombrel(false);
+				}			
+			
+		}, 0, 10000);
+	}
+	public void setBombrel(boolean state)
+	{
+		Nobomb = state;
 	}
 }

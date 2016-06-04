@@ -10,7 +10,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -74,14 +73,10 @@ public class Server extends JFrame {
 				addLine(Integer.toString(count));
 				connThread.sendMessage(RG.getPropMap());
 				connThread.start();				
-				// add the connection thread to a ArrayList, so that we can
-				// access it after esrd.
 				connections.add(connThread);
 				//let connThread wait connections.sendMessage();
 				count++;
-			} catch (IOException e) {
-				//e.printStackTrace();
-			}
+			} catch (IOException e) {}
 		}
 		boolean test = true;
 		while(true)
@@ -93,31 +88,13 @@ public class Server extends JFrame {
 				break;
 			}
 			else
-				System.out.println(123);
+				System.out.print("");
 				
 			if(test)//some bug, if not add ,check never used   
 			{
 				test = false;				
 			}	
 		}
-		/*
-		
-		while(true)	{			
-			if(connections.get(0).getchange() && connections.get(1).getchange())//when client1 and client2 both send new answer,then check else do nothing 
-			{
-				addLine("Chancing!");//show on frame
-				for (ConnectionThread connection : connections)
-				{
-					if(connection.getchange())						
-						broadcast(connection.getline());
-				}
-				setchange(false);//reset change signal				
-			}		
-			if(test)//some bug, if not add ,check never used   
-			{
-				test = false;				
-			}			
-		}	*/
 	}
 	public void setchange(boolean change)
 	{
@@ -132,16 +109,6 @@ public class Server extends JFrame {
 		}
 	}
 
-	// Define an inner class (class name should be ConnectionThread)
-	/*
-	 * public class ConnectionThread extends Thread { public void run() { try {
-	 * Socket connectionToClient = serverSocket.accept(); System.out.println(
-	 * "Get connection from client " + connectionToClient.getInetAddress() + ":"
-	 * + connectionToClient.getPort()); }catch (IOException e){
-	 * e.printStackTrace(); } } public void sendMessage(String message) {
-	 * 
-	 * } }
-	 */
 	class ConnectionThread extends Thread {
 		private Socket socket;
 		private BufferedReader reader;
@@ -252,10 +219,3 @@ public class Server extends JFrame {
 		server.runForever();
 	}
 }
-/*
- * try { this.serverSocket = new ServerSocket(portNum); Socket
- * connectionToClient = this.serverSocket.accept(); System.out.println(
- * "Get connection from client " + connectionToClient.getInetAddress() + ":" +
- * connectionToClient.getPort()); } catch (BindException e){
- * e.printStackTrace(); } catch (IOException e){ e.printStackTrace(); }
- */

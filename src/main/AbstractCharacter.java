@@ -21,15 +21,20 @@ public abstract class AbstractCharacter extends JPanel{
 	protected int bombnumber;
 	protected int totalbomb;
 	public int next_x = 0, next_y = 0;
+	private boolean Nobomb = false;
+	
 	public void bombput()
 	{
-		if (bombnumber == 0)
-			System.out.println("can't put a bomb");
-		else {
-			bombnumber = bombnumber - 1;
-			bomb.get(currentbomb).setBombPosition(next_x,next_y);
-			bomb.get(currentbomb).startBomb();
-			currentbomb = (currentbomb+1)%totalbomb;
+		if(Nobomb == false)
+		{
+			if (bombnumber == 0)
+				System.out.println("can't put a bomb");
+			else {
+				bombnumber = bombnumber - 1;
+				bomb.get(currentbomb).setBombPosition(next_x,next_y);
+				bomb.get(currentbomb).startBomb();
+				currentbomb = (currentbomb+1)%totalbomb;
+			}
 		}
 	}
 	public void bombrecover()

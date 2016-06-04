@@ -58,6 +58,10 @@ public class PropGenerator {
 			}
 		}
 	}
+	public void setProptoZero(int position)
+	{
+		propmap[position] = 0;
+	}
 	public void display()
 	{
 		int i;
@@ -81,6 +85,29 @@ public class PropGenerator {
 						break;			
 				}
 			}
+			getprop(i);
+		}
+	}
+	public  void getprop(int position)
+	{
+		if(gs.self.next_x+gs.self.next_y*weight == position)
+		{
+			switch(propmap[position])
+			{
+				case 4:
+					gs.client.sendMessage("PROP@"+gs.self.getid()+"@U@"+position);
+					break;
+				case 5:
+					gs.client.sendMessage("PROP@"+gs.self.getid()+"@D@"+position);
+					break;
+				case 6:
+					gs.client.sendMessage("PROP@"+gs.self.getid()+"@A@"+position);
+					break;
+				case 7:
+					gs.client.sendMessage("PROP@"+gs.self.getid()+"@N@"+position);
+					break;	
+			}			
+			propmap[position] = 0;			
 		}
 	}
 }

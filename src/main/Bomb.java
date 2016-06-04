@@ -30,10 +30,10 @@ public class Bomb extends TimerTask{
 	public void run() {
 		if(start)
 		{
-			gs.gamemap.ChangeByUser(bombX/blocksizeX, bombY/blocksizeY, 3);
+			gs.gamemap.ChangeByUser(bombX, bombY, 3);
 			if(count > 7)
 			{
-				gs.gamemap.ChangeByUser(bombX/blocksizeX, bombY/blocksizeY, 0);
+				gs.gamemap.ChangeByUser(bombX, bombY, 0);
 				count = 0;
 				start = false;
 				isexplode = false;
@@ -55,6 +55,7 @@ public class Bomb extends TimerTask{
 			count++;
 		}
 	}
+	
 	public void setPower(int p){
 		power = p;
 	}
@@ -90,11 +91,11 @@ public class Bomb extends TimerTask{
 		int i;
 		int X = bombX + shiftX,Y = bombY + shiftY;
 		for (i = 1;i < power;i++) {
-			if (gs.gamemap.getoneboxmap(X/blocksizeX, Y/blocksizeY) == 2
-				|| gs.gamemap.getoneboxmap(X/blocksizeX, Y/blocksizeY) == 8)
+			if (gs.gamemap.getoneboxmap(X, Y) == 2
+				|| gs.gamemap.getoneboxmap(X, Y) == 8)
 				break;
-			gs.image(fire, X, Y,blocksizeX,blocksizeY);
-			gs.gamemap.ChangeByUser(X/blocksizeX, Y/blocksizeY, 0);
+			gs.image(fire, X*blocksizeX, Y*blocksizeY,blocksizeX,blocksizeY);
+			gs.gamemap.ChangeByUser(X, Y, 0);
 			X += shiftX;
 			Y += shiftY;
 		}
@@ -103,13 +104,13 @@ public class Bomb extends TimerTask{
 	{
 		if (start) {
 			if (isexplode){
-				gs.image(fire, bombX , bombY,blocksizeX,blocksizeY);
-				paintline(blocksizeX,0);
-				paintline(-blocksizeX,0);
-				paintline(0,blocksizeY);
-				paintline(0,-blocksizeY);
+				gs.image(fire, bombX*blocksizeX , bombY*blocksizeY,blocksizeX,blocksizeY);
+				paintline(1,0);
+				paintline(-1,0);
+				paintline(0,1);
+				paintline(0,-1);
 			} else {
-				gs.image(image,bombX,bombY,blocksizeX,blocksizeY);
+				gs.image(image,bombX*blocksizeX,bombY*blocksizeY,blocksizeX,blocksizeY);
 			}
 		}
 	}
