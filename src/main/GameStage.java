@@ -4,6 +4,9 @@ import processing.core.PApplet;
 import processing.event.KeyEvent;
 import processing.core.PImage;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import controlP5.*;
 
 import controlP5.Button;
@@ -11,6 +14,7 @@ import controlP5.ControlP5;
 
 import controlP5.Textfield;
 import ddf.minim.*;
+
 
 /**
 * This class is for sketching outcome using Processing
@@ -37,6 +41,11 @@ public class GameStage extends PApplet{
 	//Client
 	Client client = new Client("127.0.0.1",8000);
 	private boolean ready = false;
+	
+	//timer
+	private int sec = 0;
+		private java.util.Timer timer = new java.util.Timer();
+		private boolean timestart = false;
 
 	public void setup() {
 		size(width, height);
@@ -135,10 +144,17 @@ public class GameStage extends PApplet{
 
 		fill(0);
 		textSize(19);
-		text("Introduction:", 695, 28);
-		text("Name:"+self.getName(), 695, 48);
-		text("Score:"+self.getNowScore(), 695, 70);
-		text("XP:"+self.getXP(), 695, 95);
+		if(timestart == false)
+		{
+			timestart = true;
+			Timer();			
+		}
+		text("Time : "+sec, 695, 28);
+		
+		text("Introduction:", 695, 48);//28
+		text("Name:"+self.getName(), 695, 70);//48
+		text("Score:"+self.getNowScore(), 695, 125);//70
+		text("XP:"+self.getXP(), 695, 95);//95
 		//chat
 		textSize(19);
 		fill(155,220,0);
@@ -190,6 +206,16 @@ public class GameStage extends PApplet{
 			gstat =  Gamestate.GameStart;
 			client.setchange(false);
 		}
+	}
+	private void Timer()
+	{
+		timer.schedule(new TimerTask() {
+			public void run(){
+				if(sec < 300){
+					sec++;
+				}				
+			}
+		}, 0,1000);
 	}
 	public void keyPressed(KeyEvent e){
 		int key1 = e.getKeyCode();
