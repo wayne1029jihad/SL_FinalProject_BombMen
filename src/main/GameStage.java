@@ -33,7 +33,7 @@ public class GameStage extends PApplet{
 	private Character_one opponent;
 	private boolean pressed = false;
 	Textarea myTextarea;
-	private enum Gamestate {Init,Menu,WatingConn,GameStart};
+	private enum Gamestate {Init,Menu,ChMenu,WatingConn,GameStart,GameEnd};
 	private Gamestate gstat = Gamestate.Init;
 	public String chatword;
 	Minim minim;
@@ -46,7 +46,8 @@ public class GameStage extends PApplet{
 	private int sec = 0;
 		private java.util.Timer timer = new java.util.Timer();
 		private boolean timestart = false;
-
+	//
+	private int[]prop;
 	public void setup() {
 		size(width, height);
 		smooth();
@@ -86,8 +87,8 @@ public class GameStage extends PApplet{
 		                  .showScrollbar().hide();
 		 
 
-		self= new Character_one(this,"CH1",45,40,5,client.getNumber());		
-		gamemap = new Map(this,15,13);
+		self= new Character_one(this,"CH1",45,40,5,client.getNumber());
+		
 		
 		//add music
 		minim=new Minim(this);
@@ -96,6 +97,10 @@ public class GameStage extends PApplet{
 		//Client
 		client.connect();
 		login = new LoginPanel(client);
+		
+		prop = new int[15*13];
+		getprop();
+		gamemap = new Map(this,15,13,prop);
 	}
 	
 	public void btn1(){
@@ -135,8 +140,9 @@ public class GameStage extends PApplet{
 		
 	}
 	private void gamestart() {
+		
 		gamemap.display();
-
+		gamemap.PG.display();
 		//introduction
 		fill(155,220,235);
 		rect(690, 5, 400, 100);
@@ -188,7 +194,7 @@ public class GameStage extends PApplet{
 		if(token.equals("BEGIN") )
 		{
 			System.out.println("send");
-			delay(500);
+			delay(100);
 			client.sendMessage(self.getid()+"@"+self.getName()+"@"+self.getX()+"@"+self.getY());
 			while(!client.getchange());
 			token = client.getdata();
@@ -359,5 +365,17 @@ public class GameStage extends PApplet{
 				myTextarea.append(trans[1]+"\n");			
 			 }	 
 			 //client.setchange(false);
+	}
+	public void getprop()
+	{
+		delay(100);
+		String propdata = client.getdata();
+		String []trans;
+		trans = propdata.split("@");
+		System.out.println("trans size : "+trans.length);
+		for(int i = 0; i < trans.length; i++)
+		{
+			prop[i] = Integer.valueOf(trans[i]);
+		}
 	}
 }

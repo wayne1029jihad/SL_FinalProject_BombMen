@@ -15,16 +15,20 @@ public class Map implements Map_interface{//
 	private int []map;
 	PImage background,obstacle,obstacle_break,wall,floor,bomb;
 	
+	//prop
+	public PropGenerator PG;
+	
 	static BufferedReader br = null;//read bit map 	
 	
 	//constructer version
-	public Map(GameStage gs, int weight, int height)
+	public Map(GameStage gs, int weight, int height,int[]prop)
 	{
 		this.weight = weight;
 		this.height = height;
 		this.gs = gs;
-		map = new int[weight*height]; 
+		map = new int[weight*height];		
 		loadmap();
+		PG = new PropGenerator(gs,this,weight,height,map,prop);
 	}
 	public void loadmap()
 	{
@@ -101,5 +105,9 @@ public class Map implements Map_interface{//
 			return map[X+weight*Y];
 		else
 			return -1;
+	}
+	public int getoneboxmap(int index)
+	{		
+		return map[index];		
 	}
 }

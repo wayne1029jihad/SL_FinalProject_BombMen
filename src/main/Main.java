@@ -1,6 +1,9 @@
 package main;
 
+//import java.util.TimerTask;
+
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 /**
 * This class is the main class of the program.
@@ -13,18 +16,18 @@ import javax.swing.JFrame;
 public class Main extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private final static int windowWidth = 1200, windowHeight = 670;
-	
 	public static void main(String [] args){
 		
 		GameStage game = new GameStage();
 		game.init();
 		game.start();
-		game.setFocusable(true);
+		game.setFocusable(true);		
 		
 		JFrame window = new JFrame("BombMen");
 		window.setContentPane(game);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setSize(windowWidth, windowHeight);
-		window.setVisible(true);
+		window.setVisible(true);	
+		
 	}
 }

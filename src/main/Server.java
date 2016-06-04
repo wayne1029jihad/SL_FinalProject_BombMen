@@ -27,7 +27,9 @@ public class Server extends JFrame {
 	private String loginpasswd = "", loginaccount = "";
 	BufferedReader br = null;
 	BufferedWriter wr = null;
-
+	
+	//prop
+	private randomGenerator RG = new randomGenerator(15,13);
 	public Server(int portNum) {				
 		setSize(300, 250);// set window size
 		setResizable(false);// fixed the window size
@@ -70,6 +72,7 @@ public class Server extends JFrame {
 				ConnectionThread connThread = new ConnectionThread(connectionToClient);
 				connThread.sendMessage(Integer.toString(count));
 				addLine(Integer.toString(count));
+				connThread.sendMessage(RG.getPropMap());
 				connThread.start();				
 				// add the connection thread to a ArrayList, so that we can
 				// access it after esrd.
