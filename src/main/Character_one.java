@@ -12,6 +12,7 @@ public class Character_one extends AbstractCharacter{
 	private PImage up,right,right_go,left,left_go,down;
 	private String name;
 	public Direction d;
+	private int life = 1;
 	private int boxweight = 45;
 	private int boxheight = 40;
 	private int id;//the number of player
@@ -107,6 +108,17 @@ public class Character_one extends AbstractCharacter{
 			initial_X = next_x = next_x *13;
 			initial_Y = next_y = next_y *11;
 		}
+	}
+	public void setXP(int life)
+	{
+		this.life=life;
+		System.out.println(life);
+		if(life == 0)
+			gs.client.sendMessage("DEAD@"+getid());
+	}
+	public int getXP()
+	{
+		return life;
 	}
 	public int getid()
 	{

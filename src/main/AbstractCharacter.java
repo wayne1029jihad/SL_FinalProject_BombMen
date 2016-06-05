@@ -15,7 +15,7 @@ public abstract class AbstractCharacter extends JPanel{
 	abstract public void initial();
 	private int NOW_SCORE;
 	private int powertimes;	
-	private int life = 1;
+
 	protected ArrayList<Bomb> bomb;
 	protected int currentbomb;
 	protected int bombnumber;
@@ -42,16 +42,7 @@ public abstract class AbstractCharacter extends JPanel{
 	{
 		bombnumber = bombnumber + 1;
 	}
-	public void setXP(int life)
-	{
-		this.life=life;
-		if(life == 0)
-			disActive();		
-	}
-	public int getXP()
-	{
-		return life;
-	}
+	
 	public void setActive(){
 		isActive = true;
 	}

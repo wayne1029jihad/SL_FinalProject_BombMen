@@ -300,7 +300,7 @@ public class GameStage extends PApplet{
 			number = Integer.toString(self.getid());
 			if(trans[0].equals(number))
 			{
-				delay(100);
+				delay(200);
 				token = client.getdata();
 				trans = token.split("@");
 			}

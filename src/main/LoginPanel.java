@@ -72,7 +72,7 @@ public class LoginPanel extends PApplet{
 		String password = cp5.get(Textfield.class, "Password").getText();
 		client.sendMessage(account + "@" + password);
 
-		delay(100);
+		delay(300);
 		String temp = client.getdata();
 
 		if (temp.equals("true")) {

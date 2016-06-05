@@ -97,15 +97,12 @@ public class Bomb extends TimerTask{
 			{
 				gs.self.setXP(gs.self.getXP()-1);
 				subXP = false;
-				gs.client.sendMessage("DEAD@"+gs.self.getid());
 			}
 			if(gs.opponent.getX() == bombX && gs.opponent.getY() == bombY)
 			{
 				gs.opponent.setXP(gs.opponent.getXP()-1);
-				subXP = false;
-				gs.client.sendMessage("DEAD@"+gs.opponent.getid());
+				subXP = false;				
 			}
-			
 		}
 		for (i = 1;i < power;i++) {
 			if (gs.gamemap.getoneboxmap(X, Y) == 2
@@ -117,14 +114,12 @@ public class Bomb extends TimerTask{
 				if(gs.self.getX() == X && gs.self.getY() == Y)
 				{
 					gs.self.setXP(gs.self.getXP()-1);
-					subXP = false;
-					gs.client.sendMessage("DEAD@"+gs.self.getid());
+					subXP = false;					
 				}
 				if(gs.opponent.getX() == X && gs.opponent.getY() == Y)
 				{
 					gs.opponent.setXP(gs.opponent.getXP()-1);
-					subXP = false;
-					gs.client.sendMessage("DEAD@"+gs.opponent.getid());
+					subXP = false;					
 				}
 			}
 			X += shiftX;
@@ -145,5 +140,4 @@ public class Bomb extends TimerTask{
 			}
 		}
 	}
-		
 }

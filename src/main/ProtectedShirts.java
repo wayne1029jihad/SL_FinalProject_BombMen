@@ -10,8 +10,8 @@ public class ProtectedShirts {
 	BufferedImage shirts;
 	int x,y;
 	boolean iswear=false;
-	AbstractCharacter ch;
-	ProtectedShirts(AbstractCharacter ch,int x,int y) throws IOException
+	Character_one ch;
+	ProtectedShirts(Character_one ch,int x,int y) throws IOException
 	{
 		shirts = ImageIO.read(new File(""));
 		this.x=x;

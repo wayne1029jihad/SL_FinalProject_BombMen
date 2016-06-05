@@ -32,6 +32,8 @@ public class Server extends JFrame {
 	private Timer timer = new java.util.Timer();
 	//prop
 	private randomGenerator RG = new randomGenerator(15,13);
+	private boolean proplock1 = true, proplock2 = true;
+	
 	public Server(int portNum) {				
 		setSize(300, 250);// set window size
 		setResizable(false);// fixed the window size
@@ -84,13 +86,20 @@ public class Server extends JFrame {
 		boolean test = false;
 		while(true)
 		{
-			if(connections.get(0).getReady())
+			if(test) 
 			{
-				connections.get(0).sendMessage(RG.getPropMap());
-			}
-			if(connections.get(1).getReady())
-			{
-				connections.get(1).sendMessage(RG.getPropMap());
+				if(connections.get(0).getReady() && proplock1)
+				{
+					connections.get(0).sendMessage(RG.getPropMap());
+					proplock1 = false;
+					System.out.println(789);
+				}
+				if(connections.get(1).getReady())
+				{
+					connections.get(1).sendMessage(RG.getPropMap());
+					proplock2 = false;
+					System.out.println(456);
+				}
 			}
 			if(connections.get(0).getReady() && connections.get(1).getReady())
 			{
@@ -108,6 +117,8 @@ public class Server extends JFrame {
 				connections.get(0).ready(false);
 				connections.get(1).ready(false);				
 				test = true;
+				proplock1 = true;
+				proplock1 = true;
 			}
 			else
 				System.out.print("");	
