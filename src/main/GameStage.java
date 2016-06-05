@@ -51,6 +51,7 @@ public class GameStage extends PApplet{
 	private int[]prop;
 	//state
 	private PImage win,lose,timeon;
+	private boolean again = false;
 	
 	public void setup() {
 		size(width, height);
@@ -147,6 +148,10 @@ public class GameStage extends PApplet{
 			gstat = Gamestate.ChMenu;
 	}
 	public void btn4(){	//Restart the game
+		cp5.get(Button.class, "btn4").hide();
+		cp5.get(Button.class, "btn5").hide();
+		sec = 0;
+		gamemap.reset();
 		self.reset();
 		opponent.reset();
 		self.setActive();
@@ -226,8 +231,6 @@ public class GameStage extends PApplet{
 			cp5.get(Textfield.class, "space").setFont(createFont("Arial",20,true)).hide();
 			cp5.get(Button.class, "btn4").show();
 			cp5.get(Button.class, "btn5").show();
-			if(client.getchange())
-				dataFromServer();
 		}
 		
 	}
@@ -247,7 +250,7 @@ public class GameStage extends PApplet{
 			timestart = true;
 			Timer();			
 		}
-		int time = 150-sec;
+		int time = 120-sec;
 		text("Time : "+time/60+" : "+time%60, 695, 28);
 		
 		text("Introduction:", 695, 48);//28
@@ -290,31 +293,31 @@ public class GameStage extends PApplet{
 		client.setchange(false);
 		if(token.equals("BEGIN") )
 		{
+			
 			delay(100);
-			client.sendMessage(self.getid()+"@"+self.getName()+"@"+self.getX()+"@"+self.getY());
-			while(!client.getchange());
-			token = client.getdata();
-			client.setchange(false);
-
-			trans = token.split("@",4);
-			number = Integer.toString(self.getid());
-			if(trans[0].equals(number))
+			if(!again)
 			{
-				delay(200);
-				token = client.getdata();
-				trans = token.split("@");
+				client.sendMessage(self.getid()+"@"+self.getName()+"@"+self.getX()+"@"+self.getY());
+				while(!client.getchange());
+					token = client.getdata();
+				client.setchange(false);
+	
+				trans = token.split("@",4);
+				number = Integer.toString(self.getid());
+				if(trans[0].equals(number))
+				{
+					delay(200);
+					token = client.getdata();
+					trans = token.split("@");
+				}
+				opponent = new Character_one(this,trans[1] ,Integer.valueOf(trans[2]),Integer.valueOf(trans[3]), 2,Integer.valueOf(trans[0]));
+				client.setchange(false);
 			}
-			opponent = new Character_one(this,trans[1] ,Integer.valueOf(trans[2]),Integer.valueOf(trans[3]), 2,Integer.valueOf(trans[0]));
 			gstat =  Gamestate.GameStart;
-			client.setchange(false);
+			
+			
+			again = true;
 		}
-	}
-	public void gameEnd()
-	{
-		sec = 0;
-		cp5.get(Button.class, "btn4").hide();
-		cp5.get(Button.class, "btn5").hide();
-		gamemap.reset();		
 	}
 	private void Timer()
 	{
@@ -509,6 +512,7 @@ public class GameStage extends PApplet{
 	public void getprop()
 	{
 		delay(100);
+		while(!client.getchange()){};
 		String propdata = client.getdata();
 		String []trans;
 		trans = propdata.split("@");

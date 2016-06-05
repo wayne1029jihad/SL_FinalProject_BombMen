@@ -21,7 +21,7 @@ import processing.data.JSONObject;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Server extends JFrame {
+public class Server extends JFrame implements Runnable{
 	private static final long serialVersionUID = 1L;
 	private ServerSocket serverSocket;
 	private List<ConnectionThread> connections = new ArrayList<ConnectionThread>();
@@ -29,7 +29,7 @@ public class Server extends JFrame {
 	private String loginpasswd = "", loginaccount = "";
 	BufferedReader br = null;
 	BufferedWriter wr = null;
-	private Timer timer = new java.util.Timer();
+	
 	//prop
 	private randomGenerator RG = new randomGenerator(15,13);
 	private boolean proplock1 = true, proplock2 = true;
@@ -60,7 +60,7 @@ public class Server extends JFrame {
 			broadcast("BEGIN");
 		}		
 	}
-	public void runForever() {
+	public void run() {
 		int count = 1;
 		//System.out.println("Server starts waiting for client.");
 		addLine("Server starts waiting for client.");			
@@ -92,13 +92,11 @@ public class Server extends JFrame {
 				{
 					connections.get(0).sendMessage(RG.getPropMap());
 					proplock1 = false;
-					System.out.println(789);
 				}
-				if(connections.get(1).getReady())
+				if(connections.get(1).getReady() && proplock2)
 				{
 					connections.get(1).sendMessage(RG.getPropMap());
-					proplock2 = false;
-					System.out.println(456);
+					proplock2 = false;					
 				}
 			}
 			if(connections.get(0).getReady() && connections.get(1).getReady())
@@ -108,23 +106,25 @@ public class Server extends JFrame {
 				if(test) 
 				{
 					RG.setProp();
-					timer.schedule(new TimerTask() {
-						public void run(){								
-						}
-					}, 200);
+					 try { 
+                         System.out.println("sleep");                         
+						 Thread.sleep(500); 
+					 } catch(InterruptedException e) { 						 
+					 }
 				}				
 				begin(true);
 				connections.get(0).ready(false);
 				connections.get(1).ready(false);				
 				test = true;
 				proplock1 = true;
-				proplock1 = true;
+				proplock2 = true;
 			}
 			else
 				System.out.print("");	
 			
 		}
 	}
+
 	public void setchange(boolean change)
 	{
 		for (ConnectionThread connection : connections) {			
@@ -247,6 +247,7 @@ public class Server extends JFrame {
 
 	public static void main(String[] args) {//main of server
 		Server server = new Server(8000);
-		server.runForever();
+		 server.run();
 	}
+
 }

@@ -11,7 +11,6 @@ public class randomGenerator {
 	
 	static BufferedReader br = null;//read bit map
 	
-	
 	public randomGenerator(int weight,int height)
 	{
 		this.weight = weight;
@@ -28,7 +27,7 @@ public class randomGenerator {
 		{
 			if(propmap[i] == 1)
 			{
-				ram = ran.nextInt(15);
+				ram = ran.nextInt(13);
 				if(ram == 0)
 					propmap[i] = 4;
 				if(ram == 1)
