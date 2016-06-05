@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -18,15 +19,13 @@ import processing.core.PApplet;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
 
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Server extends JFrame implements Runnable{
 	private static final long serialVersionUID = 1L;
 	private ServerSocket serverSocket;
 	private List<ConnectionThread> connections = new ArrayList<ConnectionThread>();
 	private JTextArea textArea;
-	private String loginpasswd = "", loginaccount = "";
+	private String loginaccount = "";
 	BufferedReader br = null;
 	BufferedWriter wr = null;
 	
@@ -154,16 +153,45 @@ public class Server extends JFrame implements Runnable{
 				//e.printStackTrace();
 			}
 		}
-		private String loginjudge(String line){
+		private String newaccount(String account,String password){
+			int i;
+			BufferedWriter output;
+			PApplet s = new PApplet();
+			JSONArray arr = s.loadJSONArray("account.json");
+			JSONObject obj = null;
+
+			for (i = 0;i< arr.size();i++){
+				obj = arr.getJSONObject(i);
+				if (obj.getString("account").equals(account))
+					break;
+			}
+			if (i < arr.size()){
+				return "cantadd";
+			}
+
+			obj.setString("account", account);
+			obj.setString("password", password);
+
+			arr.append(obj);
+
+			try {
+				output = new BufferedWriter(new FileWriter("account.json"));
+				output.write(arr.toString());
+				output.close();
+			} catch (IOException ex){
+				ex.printStackTrace();
+			}
+			return "";
+		}
+		private String submitaccount(String account,String password){
 			int i;
 			PApplet s = new PApplet();
 			JSONArray data = s.loadJSONArray("account.json");
 			JSONObject obj = null;
-			String []arr = line.split("@",2);
 			String message = "";
 			for (i = 0;i< data.size();i++){
 				obj = data.getJSONObject(i);
-				if (obj.getString("account").equals(arr[0]))
+				if (obj.getString("account").equals(account))
 					break;
 			}
 			if(data.size() == 0 ){
@@ -171,13 +199,11 @@ public class Server extends JFrame implements Runnable{
 			} else if (data.size() == i){
 				message = "noaccount";
 			} else {
-				if (obj.getString("password").equals(arr[1])) {
+				if (obj.getString("password").equals(password)) {
 					message = "true";
-					//String compasswd = "", comacct = "";
 					if (loginaccount.equals("")) {
-						loginaccount = arr[0];
-						loginpasswd = arr[1];
-					} else if (loginaccount.equals(arr[0])){
+						loginaccount = account;
+					} else if (loginaccount.equals(account)){
 						message = "islogin";
 					}
 				} else {
@@ -185,8 +211,18 @@ public class Server extends JFrame implements Runnable{
 				}
 			}
 			addLine(message);
-			addLine(arr[0] + " and " + arr[1]);
+			addLine(account + " and " + password);
 			return message;
+		}
+		private String loginjudge(String line){
+			String []arr = line.split("@",3);
+
+			if(arr[0].equals("new")){
+				return newaccount(arr[1],arr[2]);
+			} else if (arr[0].equals("submmit")){
+				return submitaccount(arr[1],arr[2]);
+			}
+			return "error";
 		}
 		public void run() {				
 			String msg = "";

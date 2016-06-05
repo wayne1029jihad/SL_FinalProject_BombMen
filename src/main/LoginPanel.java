@@ -1,12 +1,6 @@
 package main;
 
 import processing.core.PApplet;
-import processing.data.JSONArray;
-import processing.data.JSONObject;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import controlP5.ControlP5;
 import controlP5.Textfield;
@@ -70,7 +64,7 @@ public class LoginPanel extends PApplet{
 	public void Submit(){
 		String account = cp5.get(Textfield.class, "Account").getText();
 		String password = cp5.get(Textfield.class, "Password").getText();
-		client.sendMessage(account + "@" + password);
+		client.sendMessage("submmit@" + account + "@" + password);
 
 		delay(300);
 		String temp = client.getdata();
@@ -78,6 +72,7 @@ public class LoginPanel extends PApplet{
 		if (temp.equals("true")) {
 			loginpass = true;
 			frame.setVisible(false);
+			message = 0;
 			stop();
 		} else if (temp.equals("noaccount")) {
 			message = 1;
@@ -90,35 +85,16 @@ public class LoginPanel extends PApplet{
 
 	}
 	public void New(){
-		BufferedWriter output;
-		JSONArray arr = loadJSONArray("account.json");
-		JSONObject obj = null;
 		String account = cp5.get(Textfield.class, "Account").getText();
 		String password = cp5.get(Textfield.class, "Password").getText();
-		int i;
-
-		for (i = 0;i< arr.size();i++){
-			obj = arr.getJSONObject(i);
-			if (obj.getString("account").equals(account))
-				break;
-		}
-		if (i < arr.size()){
+		String temp;
+		client.sendMessage("new@" + account + "@" + password);
+		delay(300);
+		temp = client.getdata();
+		if (temp.equals("cantadd")){
 			message = 3;
-			return;
 		}
 
-		obj.setString("account", account);
-		obj.setString("password", password);
-
-		arr.append(obj);
-
-		try {
-			output = new BufferedWriter(new FileWriter("account.json"));
-			output.write(arr.toString());
-			output.close();
-		} catch (IOException ex){
-			ex.printStackTrace();
-		}
 	}
 	public void Cancel(){
 		frame.setVisible(false);
