@@ -135,6 +135,8 @@ public class Bomb extends TimerTask{
 				paintline(-1,0);
 				paintline(0,1);
 				paintline(0,-1);
+				gs.explosionSound.rewind();
+				gs.explosionSound.play();
 			} else {
 				gs.image(image,bombX*blocksizeX,bombY*blocksizeY,blocksizeX,blocksizeY);
 			}

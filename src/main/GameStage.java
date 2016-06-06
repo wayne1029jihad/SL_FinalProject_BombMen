@@ -38,7 +38,8 @@ public class GameStage extends PApplet{
 	private Gamestate gstat = Gamestate.Init;
 	public String chatword;
 	Minim minim;
-	ddf.minim.AudioPlayer song;
+	ddf.minim.AudioPlayer frontMusic;
+	ddf.minim.AudioPlayer song,explosionSound,laughingSound,shoutingSound,footstepSound,lostSound;
 	//Client
 	Client client = new Client("127.0.0.1",8000);
 	private boolean ready = false;
@@ -54,6 +55,7 @@ public class GameStage extends PApplet{
 	private boolean again = false;
 	
 	public void setup() {
+		println(dataPath(""));
 		size(width, height);
 		smooth();
 		println(dataPath(""));
@@ -125,8 +127,14 @@ public class GameStage extends PApplet{
 		
 		//add music
 		minim=new Minim(this);
-		song=minim.loadFile("song/file.mp3");
-		//song.play();
+		frontMusic=minim.loadFile("song/middleMusic.mp3");
+		song=minim.loadFile("song/song.mp3");
+		explosionSound=minim.loadFile("song/explosion.mp3");
+		laughingSound=minim.loadFile("song/laughing.mp3");
+		shoutingSound=minim.loadFile("song/shouting.mp3");
+		footstepSound=minim.loadFile("song/footstep.mp3");
+		lostSound=minim.loadFile("song/lost.mp3");
+		frontMusic.play();
 		//Client
 		client.connect();
 		login = new LoginPanel(client);
@@ -200,6 +208,7 @@ public class GameStage extends PApplet{
 			cp5.get(Button.class, "btn1").hide();
 			cp5.get(Button.class, "btn2").hide();
 			cp5.get(Button.class, "btn3").show();
+
 		}
 		if(gstat == Gamestate.ChMenu){
 			image(c1, 100, 200, 100, 100);
@@ -235,7 +244,9 @@ public class GameStage extends PApplet{
 		
 	}
 	private void gameStart() {
-		
+		frontMusic.pause();
+		song.play();
+		//song.setVolume((float) 0.01);
 		gamemap.display();
 		gamemap.PG.display();
 		//introduction
@@ -378,8 +389,15 @@ public class GameStage extends PApplet{
 			{
 				if(song.isPlaying())
 					song.pause();
-				else
+				else if(!song.isPlaying() )
 					song.play();
+			}
+			else if(key1==java.awt.event.KeyEvent.VK_HOME)
+			{
+				if(frontMusic.isPlaying())
+					frontMusic.pause();
+				else if (!frontMusic.isPlaying())
+					frontMusic.play();
 			}
 		}
 	}
@@ -406,26 +424,58 @@ public class GameStage extends PApplet{
 					 else
 					 {
 						 if(trans[3].equals("T"))
-						 {
-						 	if(trans[2].equals("L"))
-								self.move(Direction.LEFT,true);
+						 {							 
+							 if(trans[2].equals("L"))
+								{
+								 self.move(Direction.LEFT,true);
+								 footstepSound.rewind(); 
+								 footstepSound.play();
+								}
 							else if(trans[2].equals("R"))
-								self.move(Direction.RIGHT,true);	
+								{
+								self.move(Direction.RIGHT,true);
+								footstepSound.rewind();
+								footstepSound.play();
+								}
 							else if(trans[2].equals("U"))
+								{
 								self.move(Direction.UP,true);
+								footstepSound.rewind();
+								footstepSound.play();
+								}
 							else if(trans[2].equals("D"))
+								{
 								self.move(Direction.DOWN,true);
+								footstepSound.rewind();
+								footstepSound.play();
+								}
 						 }
 						 else if(trans[3].equals("F"))
 						 {
 							 if(trans[2].equals("L"))
-								self.move(Direction.LEFT,false);
+								{
+								 self.move(Direction.LEFT,false);
+								 footstepSound.rewind();
+								 footstepSound.play();
+								}
 							else if(trans[2].equals("R"))
+								{
 								self.move(Direction.RIGHT,false);	
+								 footstepSound.rewind();
+								 footstepSound.play();
+								}
 							else if(trans[2].equals("U"))
+								{
 								self.move(Direction.UP,false);
+								 footstepSound.rewind();
+								 footstepSound.play();
+								}
 							else if(trans[2].equals("D"))
+								{
 								self.move(Direction.DOWN,false); 
+								 footstepSound.rewind();
+								 footstepSound.play();
+								}
 						 }
 					 }
 							
@@ -443,7 +493,7 @@ public class GameStage extends PApplet{
 					 {
 						 if(trans[3].equals("T"))
 						 {
-						 	if(trans[2].equals("L"))
+							 if(trans[2].equals("L"))
 						 		opponent.move(Direction.LEFT,true);
 							else if(trans[2].equals("R"))
 								opponent.move(Direction.RIGHT,true);	
@@ -474,8 +524,13 @@ public class GameStage extends PApplet{
 			 {
 				 if(Integer.valueOf(trans[1])== self.getid())
 				 {
+					 song.pause();
+					 laughingSound.rewind();
+					 laughingSound.play();
+					 song.play();
 					 if(trans[2].equals("U"))
-						 self.fireup();
+					 { self.fireup();
+					 }
 					 else if(trans[2].equals("D"))
 						 self.DEF();
 					 else if(trans[2].equals("A"))
@@ -485,8 +540,12 @@ public class GameStage extends PApplet{
 				 }
 				 else if(Integer.valueOf(trans[1])== opponent.getid())
 				 {
+					 laughingSound.rewind();
+					 laughingSound.play();
 					 if(trans[2].equals("U"))
+						 {
 						 opponent.fireup();
+						 }
 					 else if(trans[2].equals("D"))
 						 opponent.DEF();
 					 else if(trans[2].equals("A"))
@@ -498,12 +557,17 @@ public class GameStage extends PApplet{
 			 }
 			 else if(trans[0].equals("DEAD"))
 			 {
+				 song.pause();
 				 if(Integer.valueOf(trans[1]) == self.getid())
-				 {
+				 { 
+					 lostSound.rewind();
+					 lostSound.play();
 					 self.disActive();
 				 }
 				 else if(Integer.valueOf(trans[1])== opponent.getid())
 				 {
+					 lostSound.rewind();
+					 lostSound.play();
 					 opponent.disActive();
 				 }
 			 }
