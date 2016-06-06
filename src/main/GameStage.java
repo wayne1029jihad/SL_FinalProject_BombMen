@@ -86,19 +86,19 @@ public class GameStage extends PApplet{
 		cp5.get(Button.class, "btn5").getCaptionLabel().setFont(createFont("Arial",20,true));
 		
 		cp5.addButton("CH1")
-		.setLabel("CH1").setPosition(100, 100).setSize(100, 50).hide();
+		.setLabel("NMOS").setPosition(200, 240).setSize(100, 50).hide();
 		cp5.get(Button.class, "CH1").getCaptionLabel().setFont(createFont("Arial",20,true));
 		
 		cp5.addButton("CH2")
-		.setLabel("CH2").setPosition(300, 100).setSize(100, 50).hide();
+		.setLabel("PMOS").setPosition(400, 240).setSize(100, 50).hide();
 		cp5.get(Button.class, "CH2").getCaptionLabel().setFont(createFont("Arial",20,true));
 		
 		cp5.addButton("CH3")
-		.setLabel("CH3").setPosition(500, 100).setSize(100, 50).hide();
+		.setLabel("CMOS").setPosition(600, 240).setSize(100, 50).hide();
 		cp5.get(Button.class, "CH3").getCaptionLabel().setFont(createFont("Arial",20,true));
 		
 		cp5.addButton("CH4")
-		.setLabel("CH4").setPosition(700, 100).setSize(100, 50).hide();
+		.setLabel("MOSFET").setPosition(800, 240).setSize(100, 50).hide();
 		cp5.get(Button.class, "CH4").getCaptionLabel().setFont(createFont("Arial",20,true));
 
 			cp5.addTextfield("space")
@@ -199,7 +199,6 @@ public class GameStage extends PApplet{
 			gstat = Gamestate.WatingConn;
 	}
 	public void draw() {
-		background(boxheight,160,110);
 		image(background,0,0,1200,680);
 		
 		if(login.loginpass){
@@ -211,10 +210,14 @@ public class GameStage extends PApplet{
 
 		}
 		if(gstat == Gamestate.ChMenu){
-			image(c1, 100, 200, 100, 100);
-			image(c2, 300, 200, 100, 100);
-			image(c3, 500, 200, 100, 100);
-			image(c4, 700, 200, 100, 100);
+			fill(40,160,100);
+			noStroke();
+			rect(0,220,1200,250);
+
+			image(c1, 200, 340, 100, 100);
+			image(c2, 400, 340, 100, 100);
+			image(c3, 600, 340, 100, 100);
+			image(c4, 800, 340, 100, 100);
 			cp5.get(Button.class, "btn3").hide();
 			cp5.get(Button.class, "CH1").show();
 			cp5.get(Button.class, "CH2").show();
