@@ -69,38 +69,34 @@ public class GameStage extends PApplet{
 		lose = loadImage("lose.png");
 		timeon = loadImage("timeup.png");
 		cp5 = new ControlP5(this);
-		cp5.addButton("btn1")
+		cp5.addButton("btnLogin")
 		.setLabel("Login").setPosition(500, 300).setSize(200, 50);
-		cp5.get(Button.class, "btn1").getCaptionLabel().setFont(createFont("Arial",20,true));
+		cp5.get(Button.class, "btnLogin").getCaptionLabel().setFont(createFont("Arial",20,true));
 
-		cp5.addButton("btn2")
-		.setLabel("Exit").setPosition(500, 500).setSize(200, 50);
-		cp5.get(Button.class, "btn2").getCaptionLabel().setFont(createFont("Arial",20,true));
+		cp5.addButton("btnExit")
+		.setLabel("Exit").setPosition(500, 520).setSize(200, 50);
+		cp5.get(Button.class, "btnExit").getCaptionLabel().setFont(createFont("Arial",20,true));
 
-		cp5.addButton("btn3")
+		cp5.addButton("btnGamestart")
 		.setLabel("Startgame").setPosition(500, 200).setSize(200, 50).hide();
-		cp5.get(Button.class, "btn3").getCaptionLabel().setFont(createFont("Arial",20,true));
-		
-		cp5.addButton("btn4")
+		cp5.get(Button.class, "btnGamestart").getCaptionLabel().setFont(createFont("Arial",20,true));
+
+		cp5.addButton("btnRestart")
 		.setLabel("Restart").setPosition(250, 520).setSize(200, 50).hide();
-		cp5.get(Button.class, "btn4").getCaptionLabel().setFont(createFont("Arial",20,true));
-		
-		cp5.addButton("btn5")
-		.setLabel("Menu").setPosition(500, 520).setSize(200, 50).hide();
-		cp5.get(Button.class, "btn5").getCaptionLabel().setFont(createFont("Arial",20,true));
-		
+		cp5.get(Button.class, "btnRestart").getCaptionLabel().setFont(createFont("Arial",20,true));
+
 		cp5.addButton("CH1")
 		.setLabel("NMOS").setPosition(200, 240).setSize(100, 50).hide();
 		cp5.get(Button.class, "CH1").getCaptionLabel().setFont(createFont("Arial",20,true));
-		
+
 		cp5.addButton("CH2")
 		.setLabel("PMOS").setPosition(400, 240).setSize(100, 50).hide();
 		cp5.get(Button.class, "CH2").getCaptionLabel().setFont(createFont("Arial",20,true));
-		
+
 		cp5.addButton("CH3")
 		.setLabel("CMOS").setPosition(600, 240).setSize(100, 50).hide();
 		cp5.get(Button.class, "CH3").getCaptionLabel().setFont(createFont("Arial",20,true));
-		
+
 		cp5.addButton("CH4")
 		.setLabel("MOSFET").setPosition(800, 240).setSize(100, 50).hide();
 		cp5.get(Button.class, "CH4").getCaptionLabel().setFont(createFont("Arial",20,true));
@@ -152,20 +148,19 @@ public class GameStage extends PApplet{
 		gamemap = new Map(this,15,13,prop);
 	}
 	
-	public void btn1(){
+	public void btnLogin(){
 		login.frame.setVisible(true);
 		login.loop();
 	}
-	public void btn2(){
+	public void btnExit(){
 		exit();
 	}
-	public void btn3(){
+	public void btnGamestart(){
 		if (gstat == Gamestate.Menu)
 			gstat = Gamestate.ChMenu;
 	}
-	public void btn4(){	//Restart the game
-		cp5.get(Button.class, "btn4").hide();
-		cp5.get(Button.class, "btn5").hide();
+	public void btnRestart(){	//Restart the game
+		cp5.get(Button.class, "btnRestart").hide();
 		sec = 0;
 		gamemap.reset();
 		self.reset();
@@ -178,14 +173,6 @@ public class GameStage extends PApplet{
 		gamemap.PG.setProp(prop);
 		gstat = Gamestate.WatingConn;
 	}
-	public void btn5(){ //Go back to the menu
-		cp5.get(Button.class, "btn4").hide();
-		cp5.get(Button.class, "btn5").hide();
-		cp5.get(Button.class, "btn1").show();
-		cp5.get(Button.class, "btn2").show();
-		gstat = Gamestate.Menu;
-	}
-	
 	public void CH1(){
 		self.setName("CH1");
 		if (gstat == Gamestate.ChMenu)
@@ -212,9 +199,9 @@ public class GameStage extends PApplet{
 		if(login.loginpass){
 			gstat = Gamestate.Menu;
 			login.loginpass = false;
-			cp5.get(Button.class, "btn1").hide();
-			cp5.get(Button.class, "btn2").hide();
-			cp5.get(Button.class, "btn3").show();
+			cp5.get(Button.class, "btnLogin").hide();
+			cp5.get(Button.class, "btnExit").hide();
+			cp5.get(Button.class, "btnGamestart").show();
 
 		}
 		if(gstat == Gamestate.ChMenu){
@@ -226,7 +213,7 @@ public class GameStage extends PApplet{
 			image(c2, 400, 340, 100, 100);
 			image(c3, 600, 340, 100, 100);
 			image(c4, 800, 340, 100, 100);
-			cp5.get(Button.class, "btn3").hide();
+			cp5.get(Button.class, "btnGamestart").hide();
 			cp5.get(Button.class, "CH1").show();
 			cp5.get(Button.class, "CH2").show();
 			cp5.get(Button.class, "CH3").show();
@@ -249,8 +236,8 @@ public class GameStage extends PApplet{
 		{
 			cp5.get(Textarea.class, "txt").setFont(createFont("Arial",20,true)).hide();
 			cp5.get(Textfield.class, "space").setFont(createFont("Arial",20,true)).hide();
-			cp5.get(Button.class, "btn4").show();
-			cp5.get(Button.class, "btn5").show();
+			cp5.get(Button.class, "btnRestart").show();
+			cp5.get(Button.class, "btnExit").show();
 			if(time  == 0)
 				image(timeon, 200, 100, 550, 400);
 			if(!self.isActive())
