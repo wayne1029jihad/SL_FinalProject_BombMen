@@ -141,7 +141,11 @@ public class GameStage extends PApplet{
 		frontMusic.play();
 		//Client
 		client.connect();
+
 		login = new LoginPanel(client);
+		runSketch(new String[]{"LOGIN"}, login);
+		login.frame.setVisible(false);
+		login.noLoop();
 		
 		prop = new int[15*13];
 		getprop();
@@ -149,8 +153,8 @@ public class GameStage extends PApplet{
 	}
 	
 	public void btn1(){
-		String []temp = {"LOGIN"};
-		runSketch(temp, login);
+		login.frame.setVisible(true);
+		login.loop();
 	}
 	public void btn2(){
 		exit();

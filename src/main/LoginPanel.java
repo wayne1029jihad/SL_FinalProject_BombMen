@@ -97,8 +97,11 @@ public class LoginPanel extends PApplet{
 
 	}
 	public void Cancel(){
+		message = 0;
+		cp5.get(Textfield.class, "Account").setText("");
+		cp5.get(Textfield.class, "Password").setText("");
 		frame.setVisible(false);
-		stop();
+		noLoop();
 	}
 	public void draw() {
 		background(255,255,255);
