@@ -25,6 +25,7 @@ public class GameStage extends PApplet{
 	private final static int width = 1200, height = 650;
 	private int boxweight = 45;
 	private int boxheight = 40;
+	private int time;
 	private PImage background;
 	private PImage c1, c2, c3, c4;
 	private ControlP5 cp5;
@@ -64,6 +65,9 @@ public class GameStage extends PApplet{
 		c2 = loadImage("CH2_front.png");
 		c3 = loadImage("CH3_front.png");
 		c4 = loadImage("CH4_front.png");
+		win = loadImage("win.png");
+		lose = loadImage("lose.png");
+		timeon = loadImage("timeup.png");
 		cp5 = new ControlP5(this);
 		cp5.addButton("btn1")
 		.setLabel("Login").setPosition(500, 300).setSize(200, 50);
@@ -78,11 +82,11 @@ public class GameStage extends PApplet{
 		cp5.get(Button.class, "btn3").getCaptionLabel().setFont(createFont("Arial",20,true));
 		
 		cp5.addButton("btn4")
-		.setLabel("Restart").setPosition(500, 300).setSize(200, 50).hide();
+		.setLabel("Restart").setPosition(250, 520).setSize(200, 50).hide();
 		cp5.get(Button.class, "btn4").getCaptionLabel().setFont(createFont("Arial",20,true));
 		
 		cp5.addButton("btn5")
-		.setLabel("Menu").setPosition(500, 500).setSize(200, 50).hide();
+		.setLabel("Menu").setPosition(500, 520).setSize(200, 50).hide();
 		cp5.get(Button.class, "btn5").getCaptionLabel().setFont(createFont("Arial",20,true));
 		
 		cp5.addButton("CH1")
@@ -243,6 +247,12 @@ public class GameStage extends PApplet{
 			cp5.get(Textfield.class, "space").setFont(createFont("Arial",20,true)).hide();
 			cp5.get(Button.class, "btn4").show();
 			cp5.get(Button.class, "btn5").show();
+			if(time  == 0)
+				image(timeon, 200, 100, 550, 400);
+			if(!self.isActive())
+				image(lose, 200, 100, 550, 400);
+			if(!opponent.isActive())
+				image(win, 200, 100, 550, 400);
 		}
 		
 	}
@@ -264,7 +274,7 @@ public class GameStage extends PApplet{
 			timestart = true;
 			Timer();			
 		}
-		int time = 120-sec;
+		time = 120-sec;
 		text("Time : "+time/60+" : "+time%60, 695, 28);
 		
 		text("Introduction:", 695, 48);//28

@@ -165,14 +165,18 @@ public class Character_one extends AbstractCharacter{
 		next_x = initial_X;
 		next_y = initial_Y;
 		bombnumber = initial_bombnum;
+		currentbomb = 0;
 		totalbomb = initial_bombnum;
 		bombPower =  initial_power;
-		bomb.clear();
+		image = down;
+		life = 1;
+		bomb.clear();		
 		bomb = new ArrayList<Bomb>();
 		for (int i = 0;i < totalbomb;i++) {
 			Bomb b = new Bomb(this,gs,bombPower,boxweight,boxheight);
 			timer.schedule(b, 0, 450);
 			bomb.add(b);
 		}
+		isActive = true;
 	}
 }

@@ -48,7 +48,7 @@ public class Server extends JFrame implements Runnable{
 			this.serverSocket = new ServerSocket(portNum);
 			addLine("Server starts listening on port "+portNum+".\n");//show on frame when server socket build successful			
 		} catch (IOException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 	
@@ -150,7 +150,7 @@ public class Server extends JFrame implements Runnable{
 				this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				this.writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 			} catch (IOException e) {
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
 		}
 		private String newaccount(String account,String password){
@@ -233,7 +233,7 @@ public class Server extends JFrame implements Runnable{
 					msg = loginjudge(line);
 					sendMessage(msg);
 				} catch (IOException e) {
-					//e.printStackTrace();
+					e.printStackTrace();
 				}
 			} while(!msg.equals("true"));
 			while (true) {				

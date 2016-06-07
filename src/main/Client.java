@@ -1,5 +1,6 @@
 package main;
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -10,7 +11,7 @@ import java.net.ConnectException;
 
 import processing.core.PApplet;
 
-public class Client extends PApplet{
+public class Client extends PApplet implements Closeable{
 	private static final long serialVersionUID = 1L;
 	private String destinationIPAddr;
 	private int destinationPortNum;
@@ -114,5 +115,11 @@ public class Client extends PApplet{
 	public int getNumber()
 	{
 		return number;
+	}
+
+	@Override
+	public void close() throws IOException {
+		// TODO Auto-generated method stub
+		connectionToServer.close();
 	}
 }

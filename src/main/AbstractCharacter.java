@@ -10,12 +10,9 @@ public abstract class AbstractCharacter extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private Vector<AbstractSkill> skills = new Vector<AbstractSkill>();	
 	protected GameStage gs;
-	private boolean isActive;
+	protected boolean isActive;
 	abstract public String getName();
 	abstract public void initial();
-	private int NOW_SCORE;
-	private int powertimes;	
-
 	protected ArrayList<Bomb> bomb;
 	protected int currentbomb;
 	protected int bombnumber;
