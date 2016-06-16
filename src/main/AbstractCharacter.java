@@ -1,51 +1,46 @@
 package main;
 
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.Timer;
 
 import javax.swing.JPanel;
+
+import processing.core.PImage;
 
 
 public abstract class AbstractCharacter extends JPanel{
 	private static final long serialVersionUID = 1L;
 	protected GameStage gs;
+	public PImage image = null;
+	protected PImage up,right,right_go,left,left_go,down;
+	protected String name;
+	public Direction d;
+	protected int life = 1;
+	protected int boxweight = 45;
+	protected int boxheight = 40;
+	protected int id;//the number of player
+	protected int bombPower = 3;
 	protected boolean isActive;
-	abstract public String getName();
-	abstract public void initial();
+	public int next_x = 0, next_y = 0;
+	//for reset
+	protected int initial_X, initial_Y,initial_bombnum;
+	protected int initial_power = 3;
+	//prop
+	protected Timer timer = new Timer();
+	//bomb
 	protected ArrayList<Bomb> bomb;
 	protected int currentbomb;
 	protected int bombnumber;
 	protected int totalbomb;
-	public int next_x = 0, next_y = 0;
 	protected boolean Nobomb = false;
 	
-	public void bombput()
-	{
-		if(Nobomb == false)
-		{
-			System.out.println("get prop:"+Nobomb);
-			if (bombnumber == 0)
-				System.out.println("can't put a bomb");
-			else {
-				bombnumber = bombnumber - 1;
-				bomb.get(currentbomb).setBombPosition(next_x,next_y);
-				bomb.get(currentbomb).startBomb();
-				currentbomb = (currentbomb+1)%totalbomb;
-			}
-		}
-	}
-	public void bombrecover()
-	{
-		bombnumber = bombnumber + 1;
-	}
+	abstract public String getName();
+	abstract public void initial();
+	abstract public void setName(String na);
+	abstract public void setActive();
+	abstract public void disActive();
+	abstract public void move(Direction t,boolean forward);
+	abstract public void bombput();
+	abstract public void reset();		
 	
-	public void setActive(){
-		isActive = true;
-	}
-	public void disActive(){
-		isActive = false;
-	}
-	public boolean isActive(){
-		return isActive;
-	}		
 }

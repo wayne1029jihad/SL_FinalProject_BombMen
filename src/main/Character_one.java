@@ -1,27 +1,11 @@
 package main;
 
 import java.util.ArrayList;
-import java.util.Timer;
 import java.util.TimerTask;
 
-import processing.core.PImage;
 
 public class Character_one extends AbstractCharacter{
 	private static final long serialVersionUID = 1L;
-	public PImage image = null;
-	private PImage up,right,right_go,left,left_go,down;
-	private String name;
-	public Direction d;
-	private int life = 1;
-	private int boxweight = 45;
-	private int boxheight = 40;
-	private int id;//the number of player
-	private int bombPower = 3;
-	//for initial
-	private int initial_X, initial_Y,initial_bombnum;
-	private int initial_power = 3;
-	//prop
-	private Timer timer = new Timer();
 	
 	public Character_one(GameStage g, String name, int initial_X, int initial_Y,int num,int id){
 		initial();
@@ -51,6 +35,15 @@ public class Character_one extends AbstractCharacter{
 	public void initial(){
 		setActive();
 	}
+	public void setActive(){
+		isActive = true;
+	}
+	public void disActive(){
+		isActive = false;
+	}
+	public boolean isActive(){
+		return isActive;
+	}		
 	public void move(Direction t,boolean forward)
 	{
 		if(t == Direction.UP) {
@@ -132,6 +125,27 @@ public class Character_one extends AbstractCharacter{
 	{
 		return next_y;
 	}
+	public void bombput()
+	{
+		if(Nobomb == false)
+		{
+			System.out.println("get prop:"+Nobomb);
+			if (bombnumber == 0)
+				System.out.println("can't put a bomb");
+			else {
+				bombnumber = bombnumber - 1;
+				bomb.get(currentbomb).setBombPosition(next_x,next_y);
+				bomb.get(currentbomb).startBomb();
+				currentbomb = (currentbomb+1)%totalbomb;
+			}
+		}
+	}
+	public void bombrecover()
+	{
+		bombnumber = bombnumber + 1;
+	}
+	
+	
 	//fireup
 	public void fireup()
 	{
@@ -179,4 +193,5 @@ public class Character_one extends AbstractCharacter{
 		}
 		isActive = true;
 	}
+	
 }

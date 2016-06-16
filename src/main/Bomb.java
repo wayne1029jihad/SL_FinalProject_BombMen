@@ -1,6 +1,5 @@
 package main;
 
-
 import java.util.TimerTask;
 
 import processing.core.PImage;
@@ -11,13 +10,13 @@ public class Bomb extends TimerTask{
 	private int blocksizeX,blocksizeY;
 	private PImage image;
 	private PImage redbomb,blackbomb,smallbomb,fire;
-	private AbstractCharacter ch;
+	private Character_one ch;
 	private boolean isexplode = false;
 	private int count = 0;
 	private boolean start = false;
 	private boolean subXP = true;
 
-	public Bomb(AbstractCharacter ch,GameStage gs,int power,int bsizeX,int bsizeY) {
+	public Bomb(Character_one ch,GameStage gs,int power,int bsizeX,int bsizeY) {
 		
 		setPower(power);
 		this.gs = gs;
