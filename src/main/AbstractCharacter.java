@@ -8,7 +8,6 @@ import javax.swing.JPanel;
 
 public abstract class AbstractCharacter extends JPanel{
 	private static final long serialVersionUID = 1L;
-	private Vector<AbstractSkill> skills = new Vector<AbstractSkill>();	
 	protected GameStage gs;
 	protected boolean isActive;
 	abstract public String getName();

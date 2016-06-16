@@ -11,6 +11,7 @@ public class LoginPanel extends PApplet{
 	private int message = 0;
 	private Client client;
 	public boolean loginpass;
+	private String account;
 	public LoginPanel(Client c) {
 		client = c;
 		loginpass = false;
@@ -62,7 +63,7 @@ public class LoginPanel extends PApplet{
 		cp5.getController("Cancel").getCaptionLabel().setFont((createFont("Arial",20,true)));
 	}
 	public void Submit(){
-		String account = cp5.get(Textfield.class, "Account").getText();
+		 account = cp5.get(Textfield.class, "Account").getText();
 		String password = cp5.get(Textfield.class, "Password").getText();
 		client.sendMessage("submmit@" + account + "@" + password);
 
@@ -128,5 +129,9 @@ public class LoginPanel extends PApplet{
 				break;
 		}
 
+	}
+	public String getaccount()
+	{
+		return account;
 	}
 }

@@ -161,6 +161,7 @@ public class GameStage extends PApplet{
 	}
 	public void btnRestart(){	//Restart the game
 		cp5.get(Button.class, "btnRestart").hide();
+		cp5.get(Button.class, "btnExit").hide();
 		sec = 0;
 		gamemap.reset();
 		self.reset();
@@ -269,7 +270,7 @@ public class GameStage extends PApplet{
 		text("Time : "+time/60+" : "+time%60, 695, 28);
 		
 		text("Introduction:", 695, 48);//28
-		text("Name:"+self.getName(), 695, 72);//48
+		text("User Name:"+login.getaccount(), 695, 72);//48
 		text("XP:"+self.getXP(), 695, 95);//95
 		//chat
 		textSize(19);
